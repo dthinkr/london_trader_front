@@ -10,7 +10,11 @@ export const useTraderStore = defineStore('trader', {
     messages: [],
     status: null,
     data: [],
+    bidData:[],
+    askData:[],
+    history: [],
     ws: null,
+    spread: null,
 
   }),
   actions: {
@@ -37,6 +41,17 @@ export const useTraderStore = defineStore('trader', {
         this.initializeWebSocket();
       }
     },
+    handle_update(data) {
+      const {order_book, history, spread} = data;
+      const {bid, ask} = order_book;
+      this.bidData = bid;
+      this.askData = ask;
+      this.history = history;
+      this.spread = spread;
+      
+
+      },
+
     async initializeWebSocket() {
       const that = this;
       this.ws =  useWebSocket(this.ws_path, {
@@ -49,7 +64,6 @@ export const useTraderStore = defineStore('trader', {
         },
 
         onMessage: (e) => {
-          
           const json_data = JSON.parse(this.ws.data);
           console.debug("Message received!", json_data);
           this.messages.push(json_data);
