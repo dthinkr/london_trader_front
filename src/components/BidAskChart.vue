@@ -3,7 +3,7 @@ import { reactive, watchEffect } from 'vue';
 import { useTraderStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 import { Chart as HighchartsChart } from 'highcharts-vue';
-import HighCharts from 'highcharts';
+
 
 const { bidData, askData } = storeToRefs(useTraderStore());
 

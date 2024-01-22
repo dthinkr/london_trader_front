@@ -15,7 +15,9 @@ export const useTraderStore = defineStore('trader', {
     history: [],
     ws: null,
     spread: null,
-
+    shares: 0,
+    cash: 0,
+    current_price: null,
   }),
   actions: {
     async initializeTrader() {
@@ -42,13 +44,18 @@ export const useTraderStore = defineStore('trader', {
       }
     },
     handle_update(data) {
-      const {order_book, history, spread} = data;
+      console.debug('I am in handle_update', data)
+      const {order_book, history, spread, inventory, current_price} = data;
+      const {shares, cash} = inventory;
       const {bid, ask} = order_book;
       this.bidData = bid;
       this.askData = ask;
       this.history = history;
       this.spread = spread;
-      
+      this.shares = shares;
+      this.cash = cash;
+      this.current_price = current_price;
+
 
       },
 

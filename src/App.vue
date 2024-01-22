@@ -2,8 +2,42 @@
   <v-app>
     <v-main>
       <v-container>
-        <h2>Spread: <span v-if="spread">{{ spread }}</span> </h2>
+        <v-toolbar flat dense>
+          <v-toolbar-title>
+            <span>Market Fundamentals</span>
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <!-- Current price -->
+          <v-card class="mx-2" outlined>
+            <v-card-text>
+              Current price: <span>{{ current_price }}</span>
+            </v-card-text>
+          </v-card>
+           <!-- Spread -->
+           <v-card class="mx-2" outlined>
+            <v-card-text>
+              Spread: <span v-if="spread">{{ spread }}</span>
+            </v-card-text>
+          </v-card>
+
+          <!-- Shares -->
+          <v-card class="mx-2" outlined>
+            <v-card-text>
+              Shares: <span>{{ shares }}</span>
+            </v-card-text>
+          </v-card>
+
+          <!-- Cash -->
+          <v-card class="mx-2" outlined>
+            <v-card-text>
+              Cash: <span>{{ cash }}</span>
+            </v-card-text>
+          </v-card>
+
+          <!-- Include other market fundamentals and inventory status here -->
+        </v-toolbar>
         <BidAskChart />
+        <HistoryChart />
         <Trader />
       </v-container>
     </v-main>
@@ -22,18 +56,19 @@
 
 <script setup>
 import BidAskChart from '@/components/BidAskChart.vue';
+import HistoryChart from '@/components/HistoryChart.vue';
 import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useTraderStore } from '@/store/app'
 const {initializeTrader,sendMessage} = useTraderStore();
- 
+const { messages, spread , shares, cash,current_price} = storeToRefs(useTraderStore());
 
 function sendOrder(orderType) {
   sendMessage(orderType, {});
 }
 
 
-const { messages, spread } = storeToRefs(useTraderStore());
+
 onMounted(async () => {
   await initializeTrader();
   // Now the trader UUID is either fetched or created and stored
