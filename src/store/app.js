@@ -6,7 +6,7 @@ const wsROOT = 'ws://localhost:8000/trader'
 export const useTraderStore = defineStore('trader', {
   state: () => ({
     traderUuid: null,
-    ws_path: null,
+    
     messages: [],
     status: null,
     data: [],
@@ -19,30 +19,31 @@ export const useTraderStore = defineStore('trader', {
     cash: 0,
     current_price: null,
   }),
+  getters: {
+    ws_path: (state) => {
+      console.debug("we are in getter", state.traderUuid)
+      return `ws://localhost:8000/trader/${state.traderUuid}`;
+    }
+  },
   actions: {
     async initializeTrader() {
-      console.debug('Initializing trader')
-      // Check local storage for existing UUID
-      this.traderUuid = false //localStorage.getItem('traderUuid');
+      console.debug('Initializing trader');
+      this.traderUuid = false ;//localStorage.getItem('traderUuid');
 
       if (!this.traderUuid) {
-        console.debug('apparently no traderUuid')
-        // If not found, create a new trader
+        console.debug('Apparently no traderUuid');
         const response = await axios.post('http://localhost:8000/traders/create');
-        console.debug(response)
+        console.debug(response);
         this.traderUuid = response.data.data.trader_uuid;
-        this.ws_path = wsROOT + '/' + this.traderUuid;
-        console.debug(this.ws_path)
-        console.debug('-------------------')
+       
+        // console.debug(this.ws_path);
         localStorage.setItem('traderUuid', this.traderUuid);
 
         // Connect to WebSocket or perform other actions
-      }
-      if (this.ws_path) {
-        console.debug('I am going to initialize websocket');
         this.initializeWebSocket();
       }
     },
+
     handle_update(data) {
       console.debug('I am in handle_update', data)
       const {order_book, history, spread, inventory, current_price} = data;
