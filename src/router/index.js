@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import CreateTrader from '@/components/CreateTrader.vue';
-import TradingSystem from '@/components/TradingSystem.vue';
+import CreateTrader from '@/components/createTrader.vue';
+import TradingSystem from '@/components/tradingSystem.vue';
 import { useTraderStore } from '@/store/app'
 import { storeToRefs } from 'pinia';
 
