@@ -59,7 +59,7 @@
 
 <script setup>
 import commandTool from "@/components/commandToolBar.vue";
-import myOrdersTable from "@/components/MyOrders.vue";
+import myOrdersTable from "@/components/myOrders.vue";
 import BidAskChart from "@/components/BidAskChart.vue";
 import HistoryChart from "@/components/HistoryChart.vue";
 import { onMounted } from "vue";
