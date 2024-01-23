@@ -18,11 +18,13 @@ export const useTraderStore = defineStore('trader', {
     shares: 0,
     cash: 0,
     current_price: null,
+    myOrders: [],
   }),
   getters: {
     ws_path: (state) => {
       console.debug("we are in getter", state.traderUuid)
-      return `ws://localhost:8000/trader/${state.traderUuid}`;
+      
+      return `${import.meta.env.VITE_WS_URL}trader/${state.traderUuid}`;
     }
   },
   actions: {
@@ -32,7 +34,8 @@ export const useTraderStore = defineStore('trader', {
 
       if (!this.traderUuid) {
         console.debug('Apparently no traderUuid');
-        const response = await axios.post('http://localhost:8000/traders/create');
+        const httpUrl = import.meta.env.VITE_HTTP_URL;
+        const response = await axios.post(`${httpUrl}traders/create`);
         console.debug(response);
         this.traderUuid = response.data.data.trader_uuid;
        
@@ -46,11 +49,12 @@ export const useTraderStore = defineStore('trader', {
 
     handle_update(data) {
       console.debug('I am in handle_update', data)
-      const {order_book, history, spread, inventory, current_price} = data;
+      const {order_book, history, spread, inventory, current_price, trader_orders} = data;
       const {shares, cash} = inventory;
-      const {bid, ask} = order_book;
-      this.bidData = bid;
-      this.askData = ask;
+      const {bids, asks} = order_book;
+      this.myOrders = trader_orders;
+      this.bidData = bids;
+      this.askData = asks;
       this.history = history;
       this.spread = spread;
       this.shares = shares;

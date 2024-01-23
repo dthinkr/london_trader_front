@@ -9,6 +9,10 @@ const { bidData, askData } = storeToRefs(useTraderStore());
 
 const chartOptions = reactive({
   title: { text: 'Current Order Book' },
+  yAxis: {
+    title: { text: 'Volume (n. of shares)' },
+    min: 0,
+  },
   chart: {
     type: 'column'
   },
