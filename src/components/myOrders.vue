@@ -12,25 +12,72 @@
       sticky
     >
       <template #top="{ itemsPerPage, page, start, stop }">
-        <v-dialog v-model="dialogCancel" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5"
-              >Are you sure you want to cancel this order?</v-card-title
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" variant="text" @click="closeCancel"
-                >Cancel</v-btn
-              >
-              <v-btn
-                color="blue-darken-1"
-                variant="text"
-                @click="cancelItemConfirm"
-                >OK</v-btn
-              >
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
+        <v-dialog v-model="dialogCancel" max-width="750" class="p-3 m-3">
+          <v-layout>
+            <v-container>
+              <v-row>
+                <v-card elevation="3">
+                  <v-card-title class="text-h5"
+                    >Are you sure you want to cancel this order?</v-card-title
+                  >
+                  <v-card-body>
+                    <v-card v-if="selectedItem">
+                      <v-card-text>
+                        <v-row>
+                          <v-col cols="12">
+                            <v-row>
+                              <v-col cols="12">
+                                <v-card-text>
+                                  <span>
+                                    <b>Timestamp: </b>
+
+                                    </span>
+                                  <span>
+                                    {{ formatTimestamp(selectedItem.timestamp) }}
+                                  </span>
+                                </v-card-text>
+                              </v-col>
+                              <v-col cols="12">
+                                <v-card-text>
+                                  <b><span>Type: </span></b>
+                                  <span>{{ selectedItem.type }}</span>
+                                </v-card-text>
+                              </v-col>
+                            </v-row>
+                            <v-row>
+                              <v-col cols="12">
+                                <v-card-text>
+                                  <b><span>Price: </span></b>
+                                  <span>{{ selectedItem.price }}</span>
+                                </v-card-text>
+                              </v-col>
+                              <v-col cols="12">
+                                <v-card-text>
+                                 <b> <span>Status: </span></b>
+                                  <span>{{ selectedItem.status }}</span>
+                                </v-card-text>
+                              </v-col>
+                            </v-row>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+
+                    </v-card>
+                  </v-card-body>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue-lighten-1" @click="closeCancel"
+                      >No</v-btn
+                    >
+                    <v-btn color="red" @click="cancelItemConfirm"
+                      >Yes, I want to cancel the order</v-btn
+                    >
+                    <v-spacer></v-spacer>
+                  </v-card-actions>
+                </v-card>
+              </v-row>
+            </v-container>
+          </v-layout>
         </v-dialog>
       </template>
 
@@ -41,9 +88,9 @@
       <template v-slot:item.actions="{ item }">
         <v-icon
           size="small"
-          @click="item.status !== 'executed' && cancelItem(item)"
+          @click="item.status === 'active' && cancelItem(item)"
           :style="
-            item.status === 'executed'
+            item.status !== 'active'
               ? 'color: grey; cursor: default;'
               : 'cursor: pointer;'
           "
@@ -62,7 +109,7 @@ import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
 const dataTable = ref(null);
 const { myOrders } = storeToRefs(useTraderStore());
-const {  sendMessage } = useTraderStore();
+const { sendMessage } = useTraderStore();
 const goTo = useGoTo();
 
 const headers = [
@@ -88,19 +135,23 @@ const cancelItem = (item) => {
 };
 
 const cancelItemConfirm = () => {
-  console.debug("cancelItemConfirm",selectedItem.value.uuid)
+  console.debug("cancelItemConfirm", selectedItem.value.uuid);
   //here we need to send a message to the server to delete the order
-  sendMessage("cancel", {uuid:selectedItem.value.uuid});
+  sendMessage("cancel", { uuid: selectedItem.value.uuid });
   closeCancel();
 };
 const closeCancel = () => {
   selectedItem.value = null;
   dialogCancel.value = false;
 };
- 
-watch(myOrders, () => {
-  myOrders.value.sort((a, b) => b.timestamp - a.timestamp);
-}, { immediate: true, deep: true });
+
+watch(
+  myOrders,
+  () => {
+    myOrders.value.sort((a, b) => b.timestamp - a.timestamp);
+  },
+  { immediate: true, deep: true }
+);
 // watch(
 //   myOrders,
 //   () => {
@@ -123,8 +174,6 @@ watch(myOrders, () => {
 //   },
 //   { deep: false }
 // );
-
-
 </script>
 
 <style>
@@ -133,11 +182,12 @@ watch(myOrders, () => {
   overflow-y: auto;
 }
 #my-orders-table {
-  
 }
 #my-orders-table .v-data-table__wrapper {
   overflow-y: auto;
-  height: calc(100% - 60px); /* Adjust the 60px to the height of your table header */
+  height: calc(
+    100% - 60px
+  ); /* Adjust the 60px to the height of your table header */
 }
 #my-orders-table .v-data-table__wrapper > table {
   height: 300px;
