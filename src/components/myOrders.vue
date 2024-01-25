@@ -1,12 +1,18 @@
 <template>
   <h3>Your orders</h3>
+  <v-select
+    v-model="selectedType"
+    :items="['all', 'active',  'executed', 'cancelled',]"
+    label="Filter by Type"
+    @change="filterOrders"
+  ></v-select>
   <div id="tablewrapper">
     <v-data-table
       id="my-orders-table"
       items-per-page="-1"
       ref="dataTable"
       :headers="headers"
-      :items="myOrders"
+      :items="filteredOrders"
       class="elevation-1 table-fixed-height"
       :fixed-header="true"
       sticky
@@ -103,7 +109,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, nextTick, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import { useGoTo } from "vuetify";
 import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
@@ -111,6 +117,7 @@ const dataTable = ref(null);
 const { myOrders } = storeToRefs(useTraderStore());
 const { sendMessage } = useTraderStore();
 const goTo = useGoTo();
+const selectedType = ref('all');
 
 const headers = [
   { title: "Timestamp", key: "timestamp" },
@@ -124,6 +131,17 @@ const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp * 1000);
   return date.toLocaleString();
 };
+
+const filteredOrders = computed(() => {
+ 
+  if (selectedType.value!== 'all') {
+    
+    return myOrders.value.filter(order => order.status === selectedType.value);
+  }
+  return myOrders.value;
+});
+
+
 const selectedItem = ref(null);
 const dialogCancel = ref(false);
 const cancelItem = (item) => {
@@ -152,28 +170,7 @@ watch(
   },
   { immediate: true, deep: true }
 );
-// watch(
-//   myOrders,
-//   () => {
-//     if (dataTable.value) {
-//       nextTick(() => {
-//         // Scroll to the last item in the table
-//         const lastItem = dataTable.value.$el.querySelector(
-//           "tbody > tr:last-child"
-//         );
-//         console.debug("lastItem", lastItem);
-//         if (lastItem) {
-//           goTo(lastItem, {
-//             duration: 300,
-//             easing: "easeInOutCubic",
-//             container: "#my-orders-table .v-data-table__wrapper > table > tbody",
-//           });
-//         }
-//       });
-//     }
-//   },
-//   { deep: false }
-// );
+
 </script>
 
 <style>
