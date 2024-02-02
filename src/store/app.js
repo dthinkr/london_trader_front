@@ -6,7 +6,7 @@ const wsROOT = 'ws://localhost:8000/trader'
 export const useTraderStore = defineStore('trader', {
   state: () => ({
     traderUuid: null,
-    
+    gameParams: {}, 
     messages: [],
     status: null,
     data: [],
@@ -28,22 +28,32 @@ export const useTraderStore = defineStore('trader', {
     }
   },
   actions: {
-    async initializeTrader() {
+    async initializeTrader(formState) {
       console.debug('Initializing trader');
-      this.traderUuid = false ;//localStorage.getItem('traderUuid');
+      this.traderUuid = false; // Or fetch from localStorage.getItem('traderUuid');
 
       if (!this.traderUuid) {
         console.debug('Apparently no traderUuid');
         const httpUrl = import.meta.env.VITE_HTTP_URL;
-        const response = await axios.post(`${httpUrl}traders/create`);
-        console.debug(response);
-        this.traderUuid = response.data.data.trader_uuid;
-       
-        // console.debug(this.ws_path);
-        localStorage.setItem('traderUuid', this.traderUuid);
 
-        // Connect to WebSocket or perform other actions
-        this.initializeWebSocket();
+        try {
+          // Pass formState as the payload in the POST request
+          const response = await axios.post(`${httpUrl}traders/create`, formState);
+          console.debug(response);
+          this.traderUuid = response.data.data.trader_uuid;
+          
+          // Store the traderUuid in localStorage
+          localStorage.setItem('traderUuid', this.traderUuid);
+          
+          // Store the formState in gameParams for future reference
+          this.gameParams = formState;
+          
+          // Connect to WebSocket or perform other actions
+          this.initializeWebSocket();
+        } catch (error) {
+          console.error('Error initializing trader:', error);
+          // Handle error appropriately
+        }
       }
     },
 

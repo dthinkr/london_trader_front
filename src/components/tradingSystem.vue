@@ -1,10 +1,16 @@
 <template>
   <v-app>
-   
     <v-toolbar flat dense>
-      <v-toolbar-title>
-        <span>Market Fundamentals</span>
-      </v-toolbar-title>
+      <div class="mx-3">
+      <vue-countdown
+      @end="dayOver"
+        :time="gameParams.trading_day_duration * 60* 1000"
+        v-slot="{ days, hours, minutes, seconds }"
+      >
+        Time Remaining: 
+        {{ minutes }} minutes, {{ seconds }} seconds.
+      </vue-countdown>
+    </div>
       <v-spacer></v-spacer>
       <!-- Current price -->
       <v-card class="mx-2" outlined>
@@ -51,7 +57,6 @@
             <myOrdersTable />
           </v-col>
         </v-row>
-        
       </v-container>
     </v-main>
   </v-app>
@@ -63,12 +68,19 @@ import myOrdersTable from "@/components/myOrders.vue";
 import BidAskChart from "@/components/BidAskChart.vue";
 import HistoryChart from "@/components/HistoryChart.vue";
 import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 const { initializeTrader, sendMessage } = useTraderStore();
-const { messages, spread, shares, cash, current_price, myOrders } = storeToRefs(
+const { messages, spread, shares, cash, current_price, myOrders, gameParams} = storeToRefs(
   useTraderStore()
 );
-
-
-</script>
+const dayOver = () => {
+  sendMessage("Day over");
+  //redirect to CreateTrader (assuming "CreateTrader" is the name of the route)
+  router.push({ name: "CreateTrader" });
+  
+};
+</script> 
