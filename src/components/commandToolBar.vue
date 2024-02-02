@@ -63,6 +63,11 @@ const timeout = ref(3000); // 3000ms = 3 seconds
 
 // Determine if the user has exceeded the maximum number of short shares
 const hasExceededMaxShortShares = computed(() => {
+  // Check if there's a limit set for max_short_shares
+  if (gameParams.value.max_short_shares < 0) {
+    // No limit for short shares
+    return false;
+  }
   // Assuming negative shares indicate shorting
   return (
     shares.value < 0 &&
@@ -70,11 +75,16 @@ const hasExceededMaxShortShares = computed(() => {
   );
 });
 
-// Determine if the user has exceeded the maximum short cash
 const hasExceededMaxShortCash = computed(() => {
+  // Check if there's a limit set for max_short_cash
+  if (gameParams.value.max_short_cash < 0) {
+    // No limit for short cash
+    return false;
+  }
   // Assuming cash can go negative due to shorting, adjust logic as needed
   return (
-    cash.value < 0 && Math.abs(cash.value) >= gameParams.value.max_short_cash
+    cash.value < 0 && 
+    Math.abs(cash.value) >= gameParams.value.max_short_cash
   );
 });
 
