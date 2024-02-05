@@ -5,6 +5,7 @@ import { useWebSocket } from '@vueuse/core';
 const wsROOT = 'ws://localhost:8000/trader'
 export const useTraderStore = defineStore('trader', {
   state: () => ({
+    step:1000,
     traderUuid: null,
     gameParams: {}, 
     messages: [],

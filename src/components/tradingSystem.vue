@@ -53,8 +53,11 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12">
+          <v-col cols="6">
             <myOrdersTable />
+          </v-col>
+          <v-col cols="6">
+            <sellingBlock />
           </v-col>
         </v-row>
       </v-container>
@@ -67,6 +70,7 @@ import commandTool from "@/components/commandToolBar.vue";
 import myOrdersTable from "@/components/myOrders.vue";
 import BidAskChart from "@/components/BidAskChart.vue";
 import HistoryChart from "@/components/HistoryChart.vue";
+import sellingBlock from "./sellingBlock.vue";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 

@@ -2,10 +2,10 @@
   <v-app app>
     <v-container class="fill-height">
       <v-row justify="center" align="center">
-        <v-col cols="12" sm="8" md="6" lg="4">
+        <v-col cols="12" sm="8" md="6" lg="6">
           <v-form class="my-3">
             <v-row>
-              <v-col cols="12" sm="12">
+              <v-col cols="12" sm="6">
                 <v-text-field
                   label="Maximum number of shares for shorting"
                   v-model="formState.max_short_shares"
@@ -15,7 +15,7 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12" sm="12">
+              <v-col cols="12" sm="6">
                 <v-text-field
                   label="Maximum amount of cash for shorting"
                   v-model="formState.max_short_cash"
@@ -26,7 +26,7 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12" sm="12">
+              <v-col cols="12" sm="6">
                 <v-text-field
                   label="Initial amount of cash"
                   v-model="formState.initial_cash"
@@ -35,7 +35,7 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12" sm="12">
+              <v-col cols="12" sm="6">
                 <v-text-field
                   label="Initial amount of shares"
                   v-model="formState.initial_shares"
@@ -43,7 +43,7 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12" sm="12">
+              <v-col cols="12" sm="6">
                 <v-text-field
                   label="Duration of the trading day in minutes"
                   v-model="formState.trading_day_duration"
@@ -53,7 +53,7 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12" sm="12">
+              <v-col cols="12" sm="6">
                 <v-text-field
                   label="Maximum amount of active orders"
                   v-model="formState.max_active_orders"
@@ -61,7 +61,7 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12" sm="12">
+              <v-col cols="12" sm="6">
                 <v-text-field
                   label="Frequency of noise traders' updates in seconds"
                   v-model="formState.noise_trader_update_freq"
@@ -70,6 +70,15 @@
                   persistent-hint
                 ></v-text-field>
               </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  label="Steps for new orders"
+                  v-model="formState.step"
+                  type="number"
+                  
+                ></v-text-field>
+              </v-col>
+              
             </v-row>
           </v-form>
           <v-btn

@@ -117,7 +117,7 @@ const dataTable = ref(null);
 const { myOrders } = storeToRefs(useTraderStore());
 const { sendMessage } = useTraderStore();
 const goTo = useGoTo();
-const selectedType = ref('all');
+const selectedType = ref('active');
 
 const headers = [
   { title: "Timestamp", key: "timestamp" },
