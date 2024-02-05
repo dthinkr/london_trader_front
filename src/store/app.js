@@ -20,13 +20,30 @@ export const useTraderStore = defineStore('trader', {
     cash: 0,
     current_price: null,
     myOrders: [],
+    showSnackbar: false,
+    snackbarText: '',
   }),
   getters: {
     ws_path: (state) => {
-      console.debug("we are in getter", state.traderUuid)
-      
       return `${import.meta.env.VITE_WS_URL}trader/${state.traderUuid}`;
+    },
+    activeOrdersCount: (state) => state.myOrders.filter(order => order.status === "active").length,
+    hasExceededMaxShortShares: (state) => {
+      if (state.gameParams.max_short_shares < 0) return false;
+      return state.shares < 0 && Math.abs(state.shares) >= state.gameParams.max_short_shares;
+    },
+    hasExceededMaxShortCash: (state) => {
+      if (state.gameParams.max_short_cash < 0) return false;
+      return state.cash < 0 && Math.abs(state.cash) >= state.gameParams.max_short_cash;
+    },
+    hasReachedMaxActiveOrders (state) {return this.activeOrdersCount >= state.gameParams.max_active_orders},
+    getSnackState (state) {
+      if (this.hasExceededMaxShortCash||this.hasExceededMaxShortShares||this.hasReachedMaxActiveOrders) {
+        return true
+      }
+      return false
     }
+
   },
   actions: {
     async initializeTrader(formState) {
@@ -116,6 +133,18 @@ export const useTraderStore = defineStore('trader', {
         this.ws.send(JSON.stringify({ type, data }));
       }
     },
+    checkLimits() {
+      if (this.hasReachedMaxActiveOrders) {
+        this.snackbarText = `You are allowed to have a maximum of ${this.gameParams.max_active_orders} active orders`;
+        this.showSnackbar = true;
+      } else if (this.hasExceededMaxShortCash) {
+        this.snackbarText = `You are not allowed to short more than ${this.gameParams.max_short_cash} cash`;
+        this.showSnackbar = true;
+      } else if (this.hasExceededMaxShortShares) {
+        this.snackbarText = `You are not allowed to short more than ${this.gameParams.max_short_shares} shares`;
+        this.showSnackbar = true;
+      }
+    }
 
 
   }

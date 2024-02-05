@@ -1,7 +1,9 @@
 <template>
   <div>
-    <v-card elevation="3" subtitle="Click on red buttons to sell or buy immediately">
-        
+    <v-card
+      elevation="3"
+      subtitle="Click on red buttons to sell or buy immediately"
+    >
       <v-card-text>
         <v-container>
           <v-row>
@@ -13,6 +15,7 @@
                 class="my-1"
               >
                 <v-btn
+                  :disabled="isBuyButtonDisabled"
                   @click="sendOrder('bid', price)"
                   outlined
                   :color="getButtonColor(price, 'buy')"
@@ -29,6 +32,7 @@
                 class="my-1"
               >
                 <v-btn
+                  :disabled="isSellButtonDisabled"
                   @click="sendOrder('ask', price)"
                   outlined
                   :color="getButtonColor(price, 'sell')"
@@ -50,42 +54,29 @@ import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
 const tradingStore = useTraderStore();
 const { sendMessage } = tradingStore;
-const { gameParams, bidData, askData } = storeToRefs(tradingStore);
-const bestBid = computed(() => {
-  if (bidData.value.length > 0) {
-    return Math.max(...bidData.value.map((bid) => bid.x));
-  }
-  return null; // Or a default value
-});
+const { gameParams, bidData, askData, spread } = storeToRefs(tradingStore);
+
 const step = computed(() => {
   return gameParams.value.step;
 });
+// Compute the availability of ask and bid data
+const hasAskData = computed(() => askData.value.length > 0);
+const hasBidData = computed(() => bidData.value.length > 0);
 
-const bestAsk = computed(() => {
-  if (askData.value.length > 0) {
-    return Math.min(...askData.value.map((ask) => ask.x));
-  }
-  return null; // Or a default value
-});
+// Best bid and best ask calculations
+const bestBid = computed(() => hasBidData.value ? Math.max(...bidData.value.map(bid => bid.x)) : null);
+const bestAsk = computed(() => hasAskData.value ? Math.min(...askData.value.map(ask => ask.x)) : null);
 
-const buyPrices = computed(() => {
-  let prices = [];
-  for (let i = 0; i < 5; i++) {
-    prices.push(bestAsk.value - step.value * i);
-  }
-  return prices;
-});
+// Generating price levels for buy and sell buttons
+const buyPrices = computed(() => bestAsk.value !== null ? Array.from({ length: 5 }, (_, i) => bestAsk.value - step.value * i) : []);
+const sellPrices = computed(() => bestBid.value !== null ? Array.from({ length: 5 }, (_, i) => bestBid.value + step.value * i) : []);
 
-const sellPrices = computed(() => {
-  let prices = [];
-  for (let i = 0; i < 5; i++) {
-    prices.push(bestBid.value + step.value * i);
-  }
-  return prices;
-});
+// Specific conditions for disabling buy and sell buttons
+const isBuyButtonDisabled = computed(() => !hasAskData.value);
+const isSellButtonDisabled = computed(() => !hasBidData.value);
 
 function sendOrder(type, price) {
-  sendMessage('add_order', { type, price, quantity: 1 });
+  sendMessage("add_order", { type, price, quantity: 1 });
 }
 function getButtonColor(price, orderType) {
   if (orderType === "buy") {

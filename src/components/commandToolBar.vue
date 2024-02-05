@@ -50,54 +50,21 @@ import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 
-const { gameParams, cash, shares, myOrders } = storeToRefs(useTraderStore());
+const store = useTraderStore();
+const { gameParams, hasExceededMaxShortCash,  hasReachedMaxActiveOrders,hasExceededMaxShortShares, spread} = storeToRefs(store);
 const { sendMessage } = useTraderStore();
 // Active orders count
-const activeOrdersCount = computed(
-  () => myOrders.value.filter((order) => order.status === "active").length
-);
+ 
 const showSnackbar = ref(false);
 const snackbarText = ref('');
 const timeout = ref(3000); // 3000ms = 3 seconds
 
-
-// Determine if the user has exceeded the maximum number of short shares
-const hasExceededMaxShortShares = computed(() => {
-  // Check if there's a limit set for max_short_shares
-  if (gameParams.value.max_short_shares < 0) {
-    // No limit for short shares
-    return false;
-  }
-  // Assuming negative shares indicate shorting
-  return (
-    shares.value < 0 &&
-    Math.abs(shares.value) >= gameParams.value.max_short_shares
-  );
-});
-
-const hasExceededMaxShortCash = computed(() => {
-  // Check if there's a limit set for max_short_cash
-  if (gameParams.value.max_short_cash < 0) {
-    // No limit for short cash
-    return false;
-  }
-  // Assuming cash can go negative due to shorting, adjust logic as needed
-  return (
-    cash.value < 0 && 
-    Math.abs(cash.value) >= gameParams.value.max_short_cash
-  );
-});
-
-// Determine if the user has reached the maximum number of active orders
-const hasReachedMaxActiveOrders = computed(
-  () => activeOrdersCount.value >= gameParams.value.max_active_orders
-);
-
 // Button disabled conditions
-const isAggressiveBidDisabled = computed(() => hasExceededMaxShortCash.value);
-const isPassiveBidDisabled = computed(() => hasReachedMaxActiveOrders.value);
-const isAggressiveAskDisabled = computed(() => hasExceededMaxShortShares.value);
-const isPassiveAskDisabled = computed(() => hasReachedMaxActiveOrders.value); // Adjust logic as needed
+// either spread is null or another condtion
+const isAggressiveBidDisabled = computed(() => store.hasExceededMaxShortCash|| spread.value === null);
+const isPassiveBidDisabled = computed(() => store.hasReachedMaxActiveOrders|| spread.value === null);
+const isAggressiveAskDisabled = computed(() => store.hasExceededMaxShortShares|| spread.value === null);
+const isPassiveAskDisabled = computed(() => store.hasReachedMaxActiveOrders|| spread.value === null); // Adjust logic as needed
 
 function sendOrder(orderType) {
   sendMessage(orderType, {});
