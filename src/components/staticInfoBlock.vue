@@ -30,10 +30,6 @@ const treatment = gameParams.value.extra_info_treatment;
 const infoToShow = computed(() => {
   return extraParams.value.filter((param) => param.treatment === treatment);
 });
-console.debug('*****')
-console.debug(infoToShow.value);
-console.debug('TREAMTMENT', treatment);
-console.debug('*****')
 const randomContents = ref([]);
 
 // Initialize randomContents with a random value for each item in infoToShow

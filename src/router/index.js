@@ -32,7 +32,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
    
   const traderStore = useTraderStore();
-  console.debug('I am in router.beforeEach', traderStore.traderUuid)
+  
   // Check if traderUuid is empty and the current route is not the CreateTrader route
   if (!traderStore.traderUuid && to.name !== 'CreateTrader') {
     next({ name: 'CreateTrader' }); // Redirect to CreateTrader

@@ -70,7 +70,7 @@ const scrollToLastMessage = () => {
 
 onMounted(() => {
  
-  const n = 5; // Number of seconds between messages
+  const n = 4; // Number of seconds between messages
   setInterval(addMessage, n * 1000); 
 });
 </script>

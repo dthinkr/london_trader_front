@@ -44,6 +44,6 @@ watchEffect(() => {
 
 <template>
   <div style="width: 100%;">
-    <highcharts-chart :constructor-type="'chart'" :options="chartOptions"></highcharts-chart>
+    <highcharts-chart :constructor-type="'chart'" :options="chartOptions" style="height:300px"></highcharts-chart>
   </div>
 </template>

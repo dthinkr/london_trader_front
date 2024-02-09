@@ -120,7 +120,7 @@ export const useTraderStore = defineStore('trader', {
     },
 
     handle_update(data) {
-      console.debug('I am in handle_update', data)
+      
       const {order_book, history, spread, inventory, current_price, trader_orders} = data;
       const {shares, cash} = inventory;
       const {bids, asks} = order_book;

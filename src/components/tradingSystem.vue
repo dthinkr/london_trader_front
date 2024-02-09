@@ -66,7 +66,7 @@
         </v-row>
       </v-container>
     </v-main>
-    <v-navigation-drawer app fixed location="right" permanent width="350">
+    <v-navigation-drawer app fixed location="right" permanent width="350" :border="false" :rail="false">
       <div class="flex-container mr-3">
          
         <messageBlock class="flex-child my-3"></messageBlock>
