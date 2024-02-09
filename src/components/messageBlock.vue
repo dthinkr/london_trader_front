@@ -5,12 +5,13 @@
     <v-card-text style="height: 300px; overflow-y: auto" ref="messageContainer">
       <v-container>
         <div id="goto-container-example">
-          <!-- Dynamically set refs for each message element -->
+          <TransitionGroup name="message" tag="div" class="messages-container">
           <div 
-          class="message animate__animated animate__heartBeat"
-          v-for="(message, index) in messages" :key="index" :ref="setRef" :id="`message_${index}`">
+            class="message animate__animated animate__heartBeat"
+            v-for="(message, index) in messages" :key="index" :ref="setRef" :id="`message_${index}`">
             {{ message }}
           </div>
+        </TransitionGroup>
         </div>
       </v-container>
     </v-card-text>
@@ -19,8 +20,30 @@
 
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
-import { useGoTo } from "vuetify";
-const goTo = useGoTo();
+;
+const tradingMessages = [
+  "Your buy order for AAPL has been executed.",
+  "Market alert: BTC has dropped by 5% in the last hour.",
+  "Reminder: Your portfolio review is due next week.",
+  "Trade successful: 100 shares of TSLA sold at $720.00.",
+  "Market update: NASDAQ has risen by 0.5% today.",
+  "Funds settled: $1,500.00 has been deposited into your account.",
+  "Order placed: Buy order for 50 shares of AMZN at $3,100.00.",
+  "Warning: Your margin balance is below 20%.",
+  "Earnings report: MSFT beats Q3 expectations, shares jump.",
+  "Dividend received: $250.00 from KO.",
+  "New research report available: Analysis on the recent trends in the EV market.",
+  "Price alert: Gold has reached a new 6-month high.",
+  "Your limit order to sell 200 shares of NFLX at $550.00 has been placed.",
+  "Portfolio update: Your investments have gained 2.5% in value this month.",
+  "Reminder: Check out the latest investment strategies on our blog.",
+  "Dividend announcement: JNJ has declared a $1.05 per share dividend.",
+  "Economic update: The Federal Reserve hints at possible rate hikes next quarter.",
+  "Your watchlist update: AMD stock has increased by over 10% this week.",
+  "Security notice: Remember to update your password regularly to protect your account.",
+  "System maintenance: The platform will be temporarily unavailable from 2 AM to 4 AM this Saturday."
+];
+
 const messages = ref([]);
 const messageRefs = ref([]);
 
@@ -30,9 +53,10 @@ const setRef = (el) => {
     messageRefs.value.push(el);
   }
 };
-
 const addMessage = async () => {
-  messages.value.push(`Message ${messages.value.length + 1}`);
+  // Pick a random message from the tradingMessages array
+  const randomMessage = tradingMessages[Math.floor(Math.random() * tradingMessages.length)];
+  messages.value.push(randomMessage);
   await nextTick();
   scrollToLastMessage();
 };
@@ -46,9 +70,8 @@ const scrollToLastMessage = () => {
 
 onMounted(() => {
  
- 
-  addMessage();
-  setInterval(addMessage, 1000); // Adjust the interval as needed
+  const n = 5; // Number of seconds between messages
+  setInterval(addMessage, n * 1000); 
 });
 </script>
 <style scoped>
@@ -61,7 +84,7 @@ onMounted(() => {
 </style>
 <style scoped>
 .message {
-  background-color: #f0f4c3; /* Soft green background for received messages */
+  background-color: white; /* Soft green background for received messages */
   border: 1px solid #dce775; /* Light green border */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
   border-radius: 12px; /* Rounded corners for the bubble look */
@@ -74,5 +97,16 @@ onMounted(() => {
   left: 0; /* Align messages to the left */
   margin-right: auto; /* Ensures margin is applied correctly for alignment */
   font-size: 0.95rem; /* Adjust font size as needed */
+}
+ 
+/* Transition group enter and leave active */
+.message-enter-active, .message-leave-active {
+  transition: background-color 1s;
+}
+.message-enter-from, .message-leave-to {
+  background-color: yellow;
+}
+.message-enter-to, .message-leave-from {
+  background-color: white;
 }
 </style>
