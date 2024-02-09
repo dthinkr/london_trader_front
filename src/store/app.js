@@ -5,6 +5,50 @@ import { useWebSocket } from '@vueuse/core';
 const wsROOT = 'ws://localhost:8000/trader'
 export const useTraderStore = defineStore('trader', {
   state: () => ({
+    extraParams: [
+      {
+        var_name: "totalTransactions",
+        display_name: "Total Amount of Transactions (24h)",
+        explanation: "Shows the total volume of trades executed within the last 24 hours, indicating overall market activity.",
+        treatment: true
+      },
+      {
+        var_name: "stdDeviationLast10",
+        display_name: "Standard Deviation of the Last 10 Transactions",
+        explanation: "Represents the volatility of the market by calculating the standard deviation of the prices in the last 10 transactions.",
+        treatment: false
+      },
+      {
+        var_name: "orderBookVolume",
+        display_name: "Total Amount of Bids and Asks",
+        explanation: "Provides a snapshot of market sentiment and liquidity by showing how many buy and sell orders are open.",
+        treatment: true
+      },
+      {
+        var_name: "averageTransactionSize",
+        display_name: "Average Transaction Size (24h)",
+        explanation: "Calculated as the total transaction volume divided by the number of transactions over the last 24 hours.",
+        treatment: false
+      },
+      {
+        var_name: "executedVsSubmittedRatio",
+        display_name: "Executed to Submitted Orders Ratio (24h)",
+        explanation: "Shows how many orders were filled versus placed, indicating market activity and depth.",
+        treatment: false
+      },
+      {
+        var_name: "bidAskSpread",
+        display_name: "Current Spread Between Highest Bid and Lowest Ask",
+        explanation: "Measures the difference between the highest buy price and the lowest sell price, indicating market liquidity.",
+        treatment: true
+      },
+      {
+        var_name: "orderBookImbalance",
+        display_name: "Order Book Imbalance",
+        explanation: "Quantifies the ratio of the total volume of bids to asks, indicating whether the market sentiment leans towards buying or selling.",
+        treatment: true
+      }
+    ],    
     step:1000,
     traderUuid: null,
     gameParams: {}, 

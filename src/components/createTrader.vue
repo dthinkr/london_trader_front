@@ -5,6 +5,14 @@
         <v-col cols="12" sm="8" md="6" lg="6">
           <v-form class="my-3">
             <v-row>
+              <v-col cols="12">
+                <v-checkbox
+                  label="Additional information treatment"
+                  v-model="formState.extra_info_treatment"
+                  hint="If checked, the trader will receive additional information"
+                  persistent-hint
+                ></v-checkbox>
+              </v-col>
               <v-col cols="12" sm="6">
                 <v-text-field
                   label="Maximum number of shares for shorting"
