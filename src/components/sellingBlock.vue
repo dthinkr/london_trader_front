@@ -1,9 +1,12 @@
 <template>
-  <div>
+ 
     <v-card
+     height="100%"
       elevation="3"
-      subtitle="Click on red buttons to sell or buy immediately"
+     
     >
+      <v-card-title class="cardtitle">Decision block</v-card-title>
+      <v-card-subtitle> Click on red buttons to sell or buy immediately</v-card-subtitle>
       <v-card-text>
         <v-container>
           <v-row>
@@ -45,7 +48,7 @@
         </v-container>
       </v-card-text>
     </v-card>
-  </div>
+   
 </template>
 
 <script setup>
@@ -86,3 +89,12 @@ function getButtonColor(price, orderType) {
   }
 }
 </script>
+
+<style scoped>
+.cardtitle {
+  font-size: 20px;
+  font-weight: bold;
+  background: lightcoral;
+  color: white;
+}
+</style>

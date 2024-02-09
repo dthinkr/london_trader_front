@@ -12,11 +12,16 @@ const { history } = storeToRefs(traderStore);
 const priceGraph = ref(null);
 
 const original_options = {
+  navigator: {
+        enabled: false // This disables the navigator
+    },
+
+    // Se
   xAxis: {
     type: 'datetime',
     ordinal: false,
   },
-  title: { text: 'History chart' },
+  title: { text: 'Transaction price chart' },
   time: {
     useUTC: false
   },

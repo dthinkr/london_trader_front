@@ -11,13 +11,14 @@
     "@chenfengyuan/vue-countdown": "2",
     "@mdi/font": "7.0.96",
     "@vueuse/core": "^10.7.2",
+    "animate.css": "^4.1.1",
     "axios": "^1.6.5",
     "core-js": "^3.34.0",
     "highcharts": "^11.3.0",
     "highcharts-vue": "^1.4.3",
     "roboto-fontface": "*",
     "vue": "3",
-    "vuetify": "^3.0.0"
+    "vuetify": "3.5.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.0",

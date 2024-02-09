@@ -1,5 +1,7 @@
 <template>
-  <h3>Your orders</h3>
+    <v-card     height="100%"
+      elevation="3" >
+  <v-card-title class="cardtitle-blue">My Orders</v-card-title>
   <v-select
     v-model="selectedType"
     :items="['all', 'active',  'executed', 'cancelled',]"
@@ -18,73 +20,7 @@
       sticky
     >
       <template #top="{ itemsPerPage, page, start, stop }">
-        <v-dialog v-model="dialogCancel" max-width="750" class="p-3 m-3">
-          <v-layout>
-            <v-container>
-              <v-row>
-                <v-card elevation="3">
-                  <v-card-title class="text-h5"
-                    >Are you sure you want to cancel this order?</v-card-title
-                  >
-                  <v-card-body>
-                    <v-card v-if="selectedItem">
-                      <v-card-text>
-                        <v-row>
-                          <v-col cols="12">
-                            <v-row>
-                              <v-col cols="12">
-                                <v-card-text>
-                                  <span>
-                                    <b>Timestamp: </b>
-
-                                    </span>
-                                  <span>
-                                    {{ formatTimestamp(selectedItem.timestamp) }}
-                                  </span>
-                                </v-card-text>
-                              </v-col>
-                              <v-col cols="12">
-                                <v-card-text>
-                                  <b><span>Type: </span></b>
-                                  <span>{{ selectedItem.type }}</span>
-                                </v-card-text>
-                              </v-col>
-                            </v-row>
-                            <v-row>
-                              <v-col cols="12">
-                                <v-card-text>
-                                  <b><span>Price: </span></b>
-                                  <span>{{ selectedItem.price }}</span>
-                                </v-card-text>
-                              </v-col>
-                              <v-col cols="12">
-                                <v-card-text>
-                                 <b> <span>Status: </span></b>
-                                  <span>{{ selectedItem.status }}</span>
-                                </v-card-text>
-                              </v-col>
-                            </v-row>
-                          </v-col>
-                        </v-row>
-                      </v-card-text>
-
-                    </v-card>
-                  </v-card-body>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue-lighten-1" @click="closeCancel"
-                      >No</v-btn
-                    >
-                    <v-btn color="red" @click="cancelItemConfirm"
-                      >Yes, I want to cancel the order</v-btn
-                    >
-                    <v-spacer></v-spacer>
-                  </v-card-actions>
-                </v-card>
-              </v-row>
-            </v-container>
-          </v-layout>
-        </v-dialog>
+       
       </template>
 
       <template #item.timestamp="{ item }">
@@ -106,6 +42,7 @@
       </template>
     </v-data-table>
   </div>
+  </v-card> 
 </template>
 
 <script setup>
@@ -143,21 +80,13 @@ const filteredOrders = computed(() => {
 
 
 const selectedItem = ref(null);
-const dialogCancel = ref(false);
+ 
 const cancelItem = (item) => {
-  console.debug("cancelItem", item.status);
-  // Find the index of the item to delete
-  //then show the dialog
-  dialogCancel.value = true;
-  selectedItem.value = item;
-};
-
-const cancelItemConfirm = () => {
-  console.debug("cancelItemConfirm", selectedItem.value.uuid);
-  //here we need to send a message to the server to delete the order
-  sendMessage("cancel", { uuid: selectedItem.value.uuid });
+  sendMessage("cancel", { uuid: item.uuid });
   closeCancel();
 };
+
+ 
 const closeCancel = () => {
   selectedItem.value = null;
   dialogCancel.value = false;
@@ -189,5 +118,9 @@ watch(
 #my-orders-table .v-data-table__wrapper > table {
   height: 300px;
   overflow-y: auto;
+}
+.cardtitle-blue {
+  background-color: #1976d2;
+  color: white;
 }
 </style>
