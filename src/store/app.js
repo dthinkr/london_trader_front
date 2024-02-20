@@ -170,7 +170,7 @@ export const useTraderStore = defineStore('trader', {
       })
       
         
-      await this.ws.send (JSON.stringify({ type: 'subscribe', data: { channel: 'trader' } }));
+      
         
     },
     async sendMessage(type, data) {

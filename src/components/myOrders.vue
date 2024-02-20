@@ -75,7 +75,8 @@ const formatTimestamp = (timestamp) => {
 const selectedItem = ref(null);
  
 const cancelItem = (item) => {
-  sendMessage("cancel", { uuid: item.uuid });
+  
+  sendMessage("cancel_order", { id: item.id });
   closeCancel();
 };
 
