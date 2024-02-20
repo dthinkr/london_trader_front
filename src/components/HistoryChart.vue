@@ -16,7 +16,9 @@ const original_options = {
         enabled: false // This disables the navigator
     },
 
-    // Se
+    tooltip: {
+  pointFormat: '{point.y:.2f}' // Rounds to two decimal places in the tooltip
+},
   xAxis: {
     type: 'datetime',
     ordinal: false,
@@ -56,7 +58,7 @@ const chartOptions = reactive(original_options);
 watch(history, (newHistory) => {
   if (newHistory && newHistory.length) {
     chartOptions.series[0].data = newHistory.map(item => ({
-      x: item.timestamp * 1000, // Convert Unix timestamp to JavaScript timestamp
+      x: new Date(item.timestamp).getTime(),
       y: item.price
     }));
   }

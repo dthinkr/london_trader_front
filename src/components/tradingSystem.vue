@@ -18,13 +18,13 @@
         <!-- Current price -->
         <v-card class="mx-2" outlined>
           <v-card-text>
-            Current price: <span>{{ current_price }}</span>
+            Current price: <span>{{ formatNumber(current_price) }}</span>
           </v-card-text>
         </v-card>
         <!-- Spread -->
         <v-card class="mx-2" outlined>
           <v-card-text>
-            Spread: <span v-if="spread">{{ spread }}</span>
+            Spread: <span v-if="spread">{{ formatNumber(spread) }}</span>
           </v-card-text>
         </v-card>
 
@@ -87,7 +87,9 @@ import messageBlock from "./messageBlock.vue";
 import staticInfoBlock from "./staticInfoBlock.vue";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useFormatNumber } from '@/composables/utils';
 
+const { formatNumber } = useFormatNumber();
 const router = useRouter();
 import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";

@@ -100,7 +100,7 @@ export const useTraderStore = defineStore('trader', {
 
         try {
           // Pass formState as the payload in the POST request
-          const response = await axios.post(`${httpUrl}traders/create`, formState);
+          const response = await axios.post(`${httpUrl}trading/initiate`, formState);
           console.debug(response);
           this.traderUuid = response.data.data.trader_uuid;
           
@@ -122,6 +122,9 @@ export const useTraderStore = defineStore('trader', {
     handle_update(data) {
       
       const {order_book, history, spread, inventory, current_price, trader_orders} = data;
+      trader_orders.forEach(order => {
+        order.status = 'active';
+      });
       const {shares, cash} = inventory;
       const {bids, asks} = order_book;
       this.myOrders = trader_orders;

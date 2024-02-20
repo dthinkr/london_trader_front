@@ -23,7 +23,7 @@
                   outlined
                   :color="getButtonColor(price, 'buy')"
                   width="150"
-                  >Buy at {{ price }}</v-btn
+                  >Buy at {{ price.toFixed(2) }}</v-btn
                 >
               </div>
             </v-col>
@@ -40,7 +40,7 @@
                   outlined
                   :color="getButtonColor(price, 'sell')"
                   width="150"
-                  >Sell for {{ price }}</v-btn
+                  >Sell for {{ price.toFixed(2) }}</v-btn
                 >
               </div>
             </v-col>
@@ -79,7 +79,7 @@ const isBuyButtonDisabled = computed(() => !hasAskData.value);
 const isSellButtonDisabled = computed(() => !hasBidData.value);
 
 function sendOrder(type, price) {
-  sendMessage("add_order", { type, price, quantity: 1 });
+  sendMessage("add_order", { type, price, amount: 1 });
 }
 function getButtonColor(price, orderType) {
   if (orderType === "buy") {
