@@ -3,9 +3,7 @@ import { reactive, watchEffect, ref } from "vue";
 import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
 import { Chart as HighchartsChart } from "highcharts-vue";
-const mychart = ref(null);
 const { chartData} = storeToRefs(useTraderStore());
-import {debounce} from 'lodash';
 import { watch } from "vue";
 const chartOptions = reactive({
   title: { text: "Current Order Book" },
@@ -49,9 +47,7 @@ const chartOptions = reactive({
 });
 
 watch(chartData, () => {
-  console.log("chartData changed");
   chartOptions.series = chartData.value;
- 
 });
 
 
@@ -61,7 +57,7 @@ watch(chartData, () => {
   <div style="width: 100%">
     
     <highcharts-chart
-      ref="mychart"
+
       :constructor-type="'chart'"
       :options="chartOptions"
       style="height: 300px"

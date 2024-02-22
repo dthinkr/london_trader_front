@@ -212,27 +212,14 @@ export const useTraderStore = defineStore("trader", {
 
         onMessage: (e) => {
           const json_data = JSON.parse(this.ws.data);
-          console.debug("Message received!", json_data);
+          
           this.messages.push(json_data);
 
           if (json_data) {
             const newMessage = json_data;
-            // Dynamically call the appropriate handler based on the message type
-            const handlerName = `handle_${newMessage.type}`;
+            // todo.philipp: ideally we MAY think about passing a dynamic handler
+            // but for now we just update the incoming data. for most of the cases this is enough
             this.handle_update(newMessage);
-            console.log("Debounced update called");
-            // if (this[handlerName] && typeof this[handlerName] === "function") {
-            //   const debouncedUpdate = debounce(
-            //     this[handlerName](newMessage),
-            //     500
-            //   );
-            //   // Call the debounced update method with the message
-            //   debouncedUpdate(message);
-            // } else {
-            //   console.warn(
-            //     `No handler defined for message type: ${newMessage.type}`
-            //   );
-            // }
           }
         },
       });
