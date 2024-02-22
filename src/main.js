@@ -12,11 +12,11 @@ import App from './App.vue'
 
 // Composables
 import { createApp } from 'vue'
-import VueCountdown from '@chenfengyuan/vue-countdown';
+
 
 const app = createApp(App);
 
-app.component(VueCountdown.name, VueCountdown);
+
  
 
 registerPlugins(app)

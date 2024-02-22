@@ -2,16 +2,7 @@
   <v-app>
     <v-app-bar app fixed>
       <v-toolbar flat dense>
-        <div class="mx-3">
-          <vue-countdown
-            @end="dayOver"
-            :time="gameParams.trading_day_duration * 60 * 1000"
-            v-slot="{ days, hours, minutes, seconds }"
-          >
-            Time Remaining:
-            {{ minutes }} minutes, {{ seconds }} seconds.
-          </vue-countdown>
-        </div>
+        
         <v-spacer></v-spacer>
        
    
@@ -53,7 +44,7 @@
             <BidAskChart />
           </v-col>
           <v-col lg="6" sm="12">
-            <HistoryChart />
+            <HistoryChart v-if="false"/>
           </v-col>
         </v-row>
         <v-row class="equal-height-columns">

@@ -83,7 +83,7 @@ const cancelItem = (item) => {
  
 const closeCancel = () => {
   selectedItem.value = null;
-  dialogCancel.value = false;
+  
 };
 
 watch(

@@ -17,11 +17,6 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.23.6.tgz#ba1c9e512bda72a47e285ae42aff9d2a635a9e3b"
   integrity sha512-Z2uID7YJ7oNvAI20O9X0bblw7Qqs8Q2hFy0R9tAfnfLkp5MW0UH9eUvnDSnFwKZ0AvgS1ucqR4KzvVHgnke1VQ==
 
-"@chenfengyuan/vue-countdown@2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@chenfengyuan/vue-countdown/-/vue-countdown-2.1.2.tgz#108d96b271e8db463604b6eedbefa83f2b668487"
-  integrity sha512-/XDKIQzDDBc+4hXb681B1+ySKrStCTZONspRp+TojMcMe1edpCpuk4E/QoNVYxyZ24d+pcwN1YqnfIDgc7haBA==
-
 "@esbuild/aix-ppc64@0.19.11":
   version "0.19.11"
   resolved "https://registry.yarnpkg.com/@esbuild/aix-ppc64/-/aix-ppc64-0.19.11.tgz#2acd20be6d4f0458bc8c784103495ff24f13b1d3"
