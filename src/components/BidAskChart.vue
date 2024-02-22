@@ -9,18 +9,18 @@ import {debounce} from 'lodash';
 import { watch } from "vue";
 const chartOptions = reactive({
   title: { text: "Current Order Book" },
-  // xAxis: {
-  //   labels: {
-  //     format: "{value:.2f}", // Rounds to two decimal places for xAxis labels
-  //   },
-  // },
-  // yAxis: {
-  //   labels: {
-  //     format: "{value:.2f}", // Rounds to two decimal places for yAxis labels
-  //   },
-  //   title: { text: "Volume (n. of shares)" },
-  //   min: 0,
-  // },
+  xAxis: {
+    labels: {
+      format: "{value:.2f}", // Rounds to two decimal places for xAxis labels
+    },
+  },
+  yAxis: {
+    labels: {
+      format: "{value:.2f}", // Rounds to two decimal places for yAxis labels
+    },
+    title: { text: "Volume (n. of shares)" },
+    min: 0,
+  },
   chart: {
     type: "column",
     animation: false

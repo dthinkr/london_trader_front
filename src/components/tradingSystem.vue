@@ -44,7 +44,7 @@
             <BidAskChart />
           </v-col>
           <v-col lg="6" sm="12">
-            <HistoryChart v-if="false"/>
+            <HistoryChart />
           </v-col>
         </v-row>
         <v-row class="equal-height-columns">

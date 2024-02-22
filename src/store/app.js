@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { useWebSocket } from "@vueuse/core";
-import { debounce } from "lodash";
+
 const wsROOT = "ws://localhost:8000/trader";
 
 export const useTraderStore = defineStore("trader", {
