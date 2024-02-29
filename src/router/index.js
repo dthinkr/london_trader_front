@@ -1,25 +1,34 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import CreateTrader from '@/components/createTrader.vue';
-import TradingSystem from '@/components/tradingSystem.vue';
-import { useTraderStore } from '@/store/app'
-import { storeToRefs } from 'pinia';
+import { createRouter, createWebHistory } from "vue-router";
+import CreateTradingSession from "@/components/CreateTradingSession.vue";
+import TradingSystem from "@/components/tradingSystem.vue";
+import AdminPage from "@/components/AdminPage.vue";
+import dayOver from "@/components/dayOver.vue";
+import { useTraderStore } from "@/store/app";
+import { storeToRefs } from "pinia";
 
 const routes = [
   {
-    path: '/',
-    redirect: '/create-trader' // Redirect from root to CreateTrader
+    path: "/",
+    redirect: "/create-trading-session", // Redirect from root to CreateTrader
   },
   {
-    path: '/create-trader',
-    name: 'CreateTrader',
-    component: CreateTrader,
+    path: "/create-trading-session",
+    name: "CreateTradingSession",
+    component: CreateTradingSession,
   },
   {
-    path: '/trading-system',
-    name: 'TradingSystem',
+    path: "/trader/:traderUuid",
+    name: "TradingSystem",
     component: TradingSystem,
+    props: true,
   },
-  // Add other routes here
+  {
+    path: "/day-over",
+    name: "DayOver",
+    component: dayOver,
+  },
+  // let's add a component for showing admin page
+  { path: "/admin", component: AdminPage, name: "AdminPage", props: true },
 ];
 
 const router = createRouter({
@@ -27,20 +36,15 @@ const router = createRouter({
   routes,
 });
 
-
-
 router.beforeEach((to, from, next) => {
-   
   const traderStore = useTraderStore();
-  
-  // Check if traderUuid is empty and the current route is not the CreateTrader route
-  if (!traderStore.traderUuid && to.name !== 'CreateTrader') {
-    next({ name: 'CreateTrader' }); // Redirect to CreateTrader
+
+  // Check if navigating to the TradingSystem without a traderUuid
+  if (to.name === "TradingSystem" && !to.params.traderUuid) {
+    next({ name: "CreateTradingSession" });
   } else {
-    next(); // Proceed as normal
+    next();
   }
 });
-
-
 
 export default router;

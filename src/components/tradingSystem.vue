@@ -2,10 +2,15 @@
   <v-app>
     <v-app-bar app fixed>
       <v-toolbar flat dense>
-        
+        <vue-countdown
+          :time="2 * 24 * 60 * 60 * 1000"
+          v-slot="{ days, hours, minutes, seconds }"
+        >
+          Time Remaining：{{ days }} days, {{ hours }} hours,
+          {{ minutes }} minutes, {{ seconds }} seconds.
+        </vue-countdown>
         <v-spacer></v-spacer>
-       
-   
+
         <!-- Current price -->
         <v-card class="mx-2" outlined>
           <v-card-text>
@@ -57,18 +62,27 @@
         </v-row>
       </v-container>
     </v-main>
-    <v-navigation-drawer app fixed location="right" permanent width="350" :border="false" :rail="false">
+    <v-navigation-drawer
+      app
+      fixed
+      location="right"
+      permanent
+      width="350"
+      :border="false"
+      :rail="false"
+    >
       <div class="flex-container mr-3">
-         
         <messageBlock class="flex-child my-3"></messageBlock>
         <staticInfoBlock class="flex-child my-3"></staticInfoBlock>
-         
       </div>
     </v-navigation-drawer>
   </v-app>
 </template>
 
 <script setup>
+const props = defineProps({
+  traderUuid: String,
+});
 import commandTool from "@/components/commandToolBar.vue";
 import myOrdersTable from "@/components/myOrders.vue";
 import BidAskChart from "@/components/BidAskChart.vue";
@@ -78,26 +92,29 @@ import messageBlock from "./messageBlock.vue";
 import staticInfoBlock from "./staticInfoBlock.vue";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useFormatNumber } from '@/composables/utils';
+import { useFormatNumber } from "@/composables/utils";
 
 const { formatNumber } = useFormatNumber();
 const router = useRouter();
 import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
+import { watch } from "vue";
 const { initializeTrader, sendMessage } = useTraderStore();
-const { messages, spread, shares, cash, current_price, myOrders, gameParams } =
-  storeToRefs(useTraderStore());
-const dayOver = () => {
-  sendMessage("Day over");
-  //redirect to CreateTrader (assuming "CreateTrader" is the name of the route)
-  router.push({ name: "CreateTrader" });
-};
-const menuItems = [
-  { title: "Link 1" },
-  { title: "Link 2" },
-  { title: "Link 3" },
-  // Add more links or items here
-];
+const { messages, spread, shares, cash, current_price, dayOver } = storeToRefs(
+  useTraderStore()
+);
+onMounted(() => {
+  initializeTrader(props.traderUuid);
+});
+watch(
+  dayOver,
+  (newValue) => {
+    if (newValue) {
+      router.push({ name: "DayOver" });
+    }
+  },
+  { immediate: true }
+);
 </script>
 <style scoped>
 .equal-height-columns > .v-col {
@@ -106,7 +123,7 @@ const menuItems = [
 }
 </style>
 <style scoped>
- .flex-container {
+.flex-container {
   height: 100%; /* Ensure the flex container fills the entire drawer */
   display: flex;
   flex-direction: column; /* Stack children vertically */

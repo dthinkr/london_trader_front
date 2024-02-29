@@ -7,6 +7,8 @@ const wsROOT = "ws://localhost:8000/trader";
 
 export const useTraderStore = defineStore("trader", {
   state: () => ({
+    dayOver: false,
+    tradingSessionData: {},
     extraParams: [
       {
         var_name: "totalTransactions",
@@ -70,12 +72,12 @@ export const useTraderStore = defineStore("trader", {
       {
         name: "Bids",
         color: "blue",
-        data: [[1,2]],
+        data: [[1, 2]],
       },
       {
         name: "Asks",
         color: "red",
-        data: [[1,2]],
+        data: [[1, 2]],
       },
     ],
     history: [],
@@ -123,38 +125,31 @@ export const useTraderStore = defineStore("trader", {
     },
   },
   actions: {
-    async initializeTrader(formState) {
-      console.debug("Initializing trader");
-      this.traderUuid = false; // Or fetch from localStorage.getItem('traderUuid');
+    async initializeTradingSystem(formState) {
+      const httpUrl = import.meta.env.VITE_HTTP_URL;
+      try {
+        // Pass formState as the payload in the POST request
+        const response = await axios.post(
+          `${httpUrl}trading/initiate`,
+          formState
+        );
+        console.debug(response.data.data);
+        this.tradingSessionData = response.data.data;
 
-      if (!this.traderUuid) {
-        console.debug("Apparently no traderUuid");
-        const httpUrl = import.meta.env.VITE_HTTP_URL;
-
-        try {
-          // Pass formState as the payload in the POST request
-          const response = await axios.post(
-            `${httpUrl}trading/initiate`,
-            formState
-          );
-          console.debug(response);
-          this.traderUuid = response.data.data.trader_uuid;
-
-          // Store the traderUuid in localStorage
-          localStorage.setItem("traderUuid", this.traderUuid);
-
-          // Store the formState in gameParams for future reference
-          this.gameParams = formState;
-
-          // Connect to WebSocket or perform other actions
-          this.initializeWebSocket();
-        } catch (error) {
-          console.error("Error initializing trader:", error);
-          // Handle error appropriately
-        }
+        // Store the formState in gameParams for future reference
+        this.gameParams = formState;
+        // Connect to WebSocket or perform other actions
+      } catch (error) {
+        // Handle error appropriately
       }
     },
 
+    async initializeTrader(traderUuid) {
+      console.debug("Initializing trader");
+      this.traderUuid = traderUuid;
+
+      this.initializeWebSocket();
+    },
     handle_update(data) {
       const {
         order_book,
@@ -169,7 +164,7 @@ export const useTraderStore = defineStore("trader", {
           order.status = "active";
         });
       }
-      if (inventory) {  
+      if (inventory) {
         const { shares, cash } = inventory;
         this.shares = shares;
         this.cash = cash;
@@ -179,8 +174,7 @@ export const useTraderStore = defineStore("trader", {
         this.myOrders = trader_orders;
         this.bidData = bids;
         this.askData = asks;
-        this.chartData =  [
-          
+        this.chartData = [
           {
             name: "Asks",
             color: "red",
@@ -190,15 +184,14 @@ export const useTraderStore = defineStore("trader", {
             name: "Bids",
             color: "blue",
             data: bids,
-          }
-        ]
+          },
+        ];
 
         this.history = history;
         this.spread = spread;
-       
+
         this.current_price = current_price;
       }
-      
     },
 
     async initializeWebSocket() {
@@ -212,17 +205,18 @@ export const useTraderStore = defineStore("trader", {
 
         onMessage: (e) => {
           const json_data = JSON.parse(this.ws.data);
-          
+
           this.messages.push(json_data);
 
           if (json_data) {
             const newMessage = json_data;
-            console.debug('message', newMessage)
+            console.debug("message", newMessage);
             // todo.philipp: ideally we MAY think about passing a dynamic handler
             // but for now we just update the incoming data. for most of the cases this is enough
-            if (newMessage.type==="closure") {
-              // refresh the page
-              window.location.reload();
+            if (newMessage.type === "closure") {
+              // router push to the result page
+              console.debug("CLOSURE", newMessage);
+              this.dayOver = true;
             }
             this.handle_update(newMessage);
           }

@@ -83,10 +83,8 @@
                   label="Steps for new orders"
                   v-model="formState.step"
                   type="number"
-                  
                 ></v-text-field>
               </v-col>
-              
             </v-row>
           </v-form>
           <v-btn
@@ -124,11 +122,9 @@ const formState = reactive({
 });
 
 const initializeTrader = async () => {
-  await traderStore.initializeTrader(formState);
-  if (traderStore.traderUuid) {
-    // Navigate to the Trading System after initialization
-    router.push("/trading-system");
-  }
+  await traderStore.initializeTradingSystem(formState);
+  // redirect to the admin page
+  router.push({ name: "AdminPage" });
 };
 
 const fetchData = async () => {
