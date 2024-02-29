@@ -217,8 +217,13 @@ export const useTraderStore = defineStore("trader", {
 
           if (json_data) {
             const newMessage = json_data;
+            console.debug('message', newMessage)
             // todo.philipp: ideally we MAY think about passing a dynamic handler
             // but for now we just update the incoming data. for most of the cases this is enough
+            if (newMessage.type==="closure") {
+              // refresh the page
+              window.location.reload();
+            }
             this.handle_update(newMessage);
           }
         },
