@@ -5,10 +5,11 @@
       <v-row>
         <v-col>
           <h1>adminka</h1>
-          <div>
-            {{ tradingSessionData}}
-            <v-btn :to="{ name: 'TradingSystem', params: { traderUuid: tradingSessionData.trader_uuid }}">
-    Go to Trading Session
+          {{ tradingSessionData }}
+          <div v-for="ht in tradingSessionData.human_traders">
+            Trader <b>{{ht}}</b>:
+            <v-btn :to="{ name: 'TradingSystem', params: { traderUuid: ht }}">
+     Click to Go to Trading Session
   </v-btn>
           </div>
         </v-col>
