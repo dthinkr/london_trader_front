@@ -2,13 +2,19 @@
   <v-app>
     <v-app-bar app fixed>
       <v-toolbar flat dense>
-        <vue-countdown
-          :time="2 * 24 * 60 * 60 * 1000"
-          v-slot="{ days, hours, minutes, seconds }"
-        >
-          Time Remaining：{{ days }} days, {{ hours }} hours,
-          {{ minutes }} minutes, {{ seconds }} seconds.
-        </vue-countdown>
+        <v-card class="mx-3">
+          <v-card-text>
+            <vue-countdown
+              v-if="remainingTime"
+              :time="remainingTime"
+              @end="finalizingDay"
+              v-slot="{ days, hours, minutes, seconds }"
+            >
+              Time Remaining:
+              {{ minutes }} minutes, {{ seconds }} seconds.
+            </vue-countdown>
+          </v-card-text>
+        </v-card>
         <v-spacer></v-spacer>
 
         <!-- Current price -->
@@ -90,7 +96,7 @@ import HistoryChart from "@/components/HistoryChart.vue";
 import sellingBlock from "./sellingBlock.vue";
 import messageBlock from "./messageBlock.vue";
 import staticInfoBlock from "./staticInfoBlock.vue";
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useFormatNumber } from "@/composables/utils";
 
@@ -99,18 +105,37 @@ const router = useRouter();
 import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 import { watch } from "vue";
-const { initializeTrader, sendMessage } = useTraderStore();
-const { messages, spread, shares, cash, current_price, dayOver } = storeToRefs(
-  useTraderStore()
-);
+const { initializeTrader } = useTraderStore();
+const { gameParams, spread, shares, cash, current_price, dayOver } =
+  storeToRefs(useTraderStore());
+
+const remainingTime = computed(() => {
+  const currentTime = new Date().getTime();
+  const endTime = new Date(gameParams.value.end_time).getTime();
+  return endTime - currentTime;
+});
 onMounted(() => {
   initializeTrader(props.traderUuid);
 });
+
+const finalizingDay = () => {
+  router.push({ name: "DayOver" });
+};
+watch(
+  gameParams,
+  () => {
+    if (gameParams.value.active === false) {
+      finalizingDay();
+    }
+  },
+  { immediate: true, deep: true }
+);
+
 watch(
   dayOver,
   (newValue) => {
     if (newValue) {
-      router.push({ name: "DayOver" });
+      finalizingDay();
     }
   },
   { immediate: true }

@@ -147,8 +147,18 @@ export const useTraderStore = defineStore("trader", {
     async initializeTrader(traderUuid) {
       console.debug("Initializing trader");
       this.traderUuid = traderUuid;
+      const httpUrl = import.meta.env.VITE_HTTP_URL;
+      try {
+        const response = await axios.get(`${httpUrl}trader/${traderUuid}`);
+        console.debug(response.data.data);
+        this.gameParams = response.data.data;
+        this.initializeWebSocket();
+      } catch (error) {
+        console.error(error);
+      }
 
-      this.initializeWebSocket();
+
+      
     },
     handle_update(data) {
       const {

@@ -59,9 +59,7 @@ const tradingStore = useTraderStore();
 const { sendMessage } = tradingStore;
 const { gameParams, bidData, askData, spread } = storeToRefs(tradingStore);
 
-const step = computed(() => {
-  return 10;
-});
+const step = computed(() => gameParams.value.step)
 // Compute the availability of ask and bid data
 const hasAskData = computed(() => askData.value.length > 0);
 const hasBidData = computed(() => bidData.value.length > 0);
