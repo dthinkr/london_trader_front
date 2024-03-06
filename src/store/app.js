@@ -143,7 +143,16 @@ export const useTraderStore = defineStore("trader", {
         // Handle error appropriately
       }
     },
-
+ async getTradingSessionData(tradingSessionUUID){
+      const httpUrl = import.meta.env.VITE_HTTP_URL;
+      try {
+        const response = await axios.get(`${httpUrl}trading_session/${tradingSessionUUID}`);
+        console.debug(response.data.data);
+        this.tradingSessionData = response.data.data;
+      } catch (error) {
+        console.error(error);
+      }
+ },
     async initializeTrader(traderUuid) {
       console.debug("Initializing trader");
       this.traderUuid = traderUuid;

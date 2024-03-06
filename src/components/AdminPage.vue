@@ -23,6 +23,7 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import { onMounted } from "vue";
 const props = defineProps({
   tradingSessionUUID: String,
 });
@@ -31,5 +32,8 @@ import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 
 const { tradingSessionData } = storeToRefs(useTraderStore());
+onMounted(() => {
+  useTraderStore().getTradingSessionData(props.tradingSessionUUID);
+});
 </script>
 <style scoped></style>

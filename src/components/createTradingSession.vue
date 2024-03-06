@@ -33,8 +33,9 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, ref, computed } from "vue";
+import {  onMounted, ref, computed } from "vue";
 import { useTraderStore } from "@/store/app";
+import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import axios from "axios";
 const httpUrl = import.meta.env.VITE_HTTP_URL;
@@ -50,10 +51,17 @@ const connectionServerMessage = computed(() => {
 const formState = ref({});
 const formFields = ref([]);
 
+const { tradingSessionData } =
+  storeToRefs(useTraderStore());
+
 const initializeTrader = async () => {
   await traderStore.initializeTradingSystem(formState.value);
+  
   // redirect to the admin page
-  router.push({ name: "AdminPage" });
+  router.push({ name: "AdminPage", 
+    params: { tradingSessionUUID: tradingSessionData.value.trading_session_uuid}
+
+ });
 };
 
 const fetchData = async () => {

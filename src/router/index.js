@@ -28,7 +28,12 @@ const routes = [
     component: dayOver,
   },
   // let's add a component for showing admin page
-  { path: "/admin", component: AdminPage, name: "AdminPage", props: true },
+  {
+    path: "/admin/:tradingSessionUUID",
+    component: AdminPage,
+    name: "AdminPage",
+    props: true,
+  },
 ];
 
 const router = createRouter({
