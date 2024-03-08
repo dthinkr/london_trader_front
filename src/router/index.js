@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import CreateTradingSession from "@/components/CreateTradingSession.vue";
+import CreateTradingSession from "@/components/createTradingSession.vue";
 import TradingSystem from "@/components/tradingSystem.vue";
 import AdminPage from "@/components/AdminPage.vue";
 import dayOver from "@/components/dayOver.vue";
