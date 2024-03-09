@@ -71,7 +71,7 @@ const fetchData = async () => {
   try {
     const response = await axios.get(defaultsUrl);
     const data = response.data.data;
-    console.log(data);
+    
     for (const [key, value] of Object.entries(data)) {
       formState.value[key] = value.default;
       formFields.value.push({ name: key, ...value });
