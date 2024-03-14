@@ -62,21 +62,17 @@ const props = defineProps({
 // Reactive state to store trader information
 const traderInfo = ref(null);
 
-// Fetch trader information
+const httpUrl = import.meta.env.VITE_HTTP_URL; // Access the environment variable
+
 async function fetchTraderInfo() {
   try {
-    // lets do it with 1 second delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const response = await axios.get(
-      `http://localhost:8000/trader_info/${props.traderUuid}`
-    );
-    traderInfo.value = response.data.data; // Assuming the API response structure you provided
+    const response = await axios.get(`${httpUrl}trader_info/${props.traderUuid}`);
+    traderInfo.value = response.data.data; // Adjust based on your API response
   } catch (error) {
-    console.error("Failed to fetch trader info:", error);
+    console.error('Failed to fetch trader info:', error);
     // Handle the error appropriately
   }
 }
-
 // Fetch trader information when component mounts
 onMounted(fetchTraderInfo);
 </script>
