@@ -7,7 +7,6 @@
             <vue-countdown
               v-if="remainingTime"
               :time="remainingTime"
-             
               v-slot="{ days, hours, minutes, seconds }"
             >
               Time Remaining:
@@ -33,14 +32,20 @@
         <!-- Shares -->
         <v-card class="mx-2" outlined>
           <v-card-text>
-            Shares: <span>{{ shares }}</span>
+            Shares:
+            <Transition enter-active-class="fade-in-highlight">
+              <span :key="shares">{{ shares }}</span></Transition
+            >
           </v-card-text>
         </v-card>
 
         <!-- Cash -->
         <v-card class="mx-2" outlined>
           <v-card-text>
-            Cash: <span>{{ cash }}</span>
+            Cash:
+            <Transition enter-active-class="fade-in-highlight">
+              <span :key="cash">{{ cash }}</span>
+            </Transition>
           </v-card-text>
         </v-card>
 
@@ -121,7 +126,7 @@ onMounted(() => {
 const finalizingDay = () => {
   //let's just refresh page
   // location.reload();
-  router.push({ name: "DayOver", params: { traderUuid: props.traderUuid }} );
+  router.push({ name: "DayOver", params: { traderUuid: props.traderUuid } });
 };
 watch(
   gameParams,
@@ -159,5 +164,23 @@ watch(
 .flex-child {
   flex: 1; /* Each child will take up equal space */
   overflow: auto; /* Add scroll if content overflows */
+}
+@keyframes fadeInHighlight {
+  0% {
+    background-color: yellow;
+    opacity: 0;
+  }
+  50% {
+    background-color: yellow;
+    opacity: 0.5;
+  }
+  100% {
+    background-color: transparent;
+    opacity: 1;
+  }
+}
+
+.fade-in-highlight {
+  animation: fadeInHighlight 1s ease;
 }
 </style>

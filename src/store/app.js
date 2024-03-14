@@ -4,10 +4,29 @@ import axios from "axios";
 import { useWebSocket } from "@vueuse/core";
 
 const wsROOT = "ws://localhost:8000/trader";
+function findMidpoint(bids, asks) {
+  // Ensure the arrays are not empty
+  if (!bids.length || !asks.length) {
+    console.error('One or both arrays are empty.');
+    return 0; // Or any other default value you deem appropriate
+  }
+
+  // Find the largest x value in the bids array
+  const largestBidX = Math.max(...bids.map(bid => bid.x));
+
+  // Find the lowest x value in the asks array
+  const lowestAskX = Math.min(...asks.map(ask => ask.x));
+
+  // Calculate the midpoint
+  const midpoint = (largestBidX + lowestAskX) / 2;
+
+  return midpoint;
+}
 
 export const useTraderStore = defineStore("trader", {
   state: () => ({
     dayOver: false,
+    midPoint: 0,
     tradingSessionData: {},
     extraParams: [
       {
@@ -193,6 +212,7 @@ export const useTraderStore = defineStore("trader", {
         this.myOrders = trader_orders;
         this.bidData = bids;
         this.askData = asks;
+        this.midPoint = findMidpoint(bids, asks);
         this.chartData = [
           {
             name: "Asks",
