@@ -119,7 +119,9 @@ onMounted(() => {
 });
 
 const finalizingDay = () => {
-  router.push({ name: "DayOver", params: { traderUuid: props.traderUuid }} );
+  //let's just refresh page
+  location.reload();
+  // router.push({ name: "DayOver", params: { traderUuid: props.traderUuid }} );
 };
 watch(
   gameParams,
