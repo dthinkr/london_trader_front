@@ -15,6 +15,11 @@ const original_options = {
   navigator: {
         enabled: false // This disables the navigator
     },
+    rangeSelector: {
+            selected: 1,
+						enabled:false
+        },
+				
 
     tooltip: {
   pointFormat: '{point.y:.2f}' // Rounds to two decimal places in the tooltip
