@@ -30,9 +30,9 @@
               {{ tradingSessionData.trading_session_uuid }}
             </h1>
             <!-- Removed the button for copying error message -->
-            <div v-for="ht in tradingSessionData.human_traders" class="my-3">
-              Trader <b>{{ ht }}</b
-              >:
+            <div v-for="ht in tradingSessionData.human_traders" class="my-3 d-flex align-center">
+              Trader  &nbsp; <b>{{ ht }}</b
+              >: 
               <!-- v-text-field to display the link -->
               <v-text-field
                 :value="`${getBaseURL()}/trader/${ht}`"
@@ -43,6 +43,11 @@
                   copyToClipBoard(`${getBaseURL()}/trader/${ht}`)
                 "
               ></v-text-field>
+              <!-- let's also insert link here -->
+              <v-btn :to="`/trader/${ht}`" color="primary" outlined class="mx-3" size="small"
+                target="_blank"
+                >View trader</v-btn>
+              
             </div>
           </v-col>
         </v-row>
@@ -74,3 +79,12 @@ const getBaseURL = () => {
   return `${window.location.protocol}//${window.location.host}`;
 };
 </script>
+<style scoped>
+.d-flex {
+  display: flex;
+  align-items: center; /* This vertically centers the inline items */
+}
+.flex-grow-1 {
+  flex-grow: 1;
+}
+</style>

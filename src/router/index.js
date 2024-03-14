@@ -23,9 +23,10 @@ const routes = [
     props: true,
   },
   {
-    path: "/day-over",
+    path: "/day-over/:traderUuid",
     name: "DayOver",
     component: dayOver,
+    props: true,
   },
   // let's add a component for showing admin page
   {
