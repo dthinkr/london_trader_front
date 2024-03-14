@@ -7,7 +7,7 @@
             <vue-countdown
               v-if="remainingTime"
               :time="remainingTime"
-              @end="finalizingDay"
+             
               v-slot="{ days, hours, minutes, seconds }"
             >
               Time Remaining:
@@ -121,7 +121,7 @@ onMounted(() => {
 const finalizingDay = () => {
   //let's just refresh page
   // location.reload();
-  // router.push({ name: "DayOver", params: { traderUuid: props.traderUuid }} );
+  router.push({ name: "DayOver", params: { traderUuid: props.traderUuid }} );
 };
 watch(
   gameParams,
