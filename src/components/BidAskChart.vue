@@ -60,7 +60,7 @@ watch(chartData, (newChartData) => {
   // Assuming newChartData is already updated with pointPlacement
   chartOptions.series = newChartData.map(series => ({
     ...series,
-    pointPlacement: series.name === "Bids" ? -0.2 : 0.2,
+    pointPlacement: series.name === "Bids" ? -0.5 : 0.5,
   }));
 }, { deep: true, immediate: true });
 watchEffect(() => {
