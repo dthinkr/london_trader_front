@@ -28,6 +28,7 @@ export const useTraderStore = defineStore("trader", {
     dayOver: false,
     midPoint: 0,
     pnl:0,
+    vwap: 0,
     tradingSessionData: {},
     extraParams: [
       {
@@ -198,6 +199,7 @@ export const useTraderStore = defineStore("trader", {
         current_price,
         trader_orders,
         pnl,
+        vwap
       } = data;
       if (trader_orders && trader_orders.length > 0) {
         trader_orders.forEach((order) => {
@@ -231,6 +233,7 @@ export const useTraderStore = defineStore("trader", {
         this.history = history;
         this.spread = spread;
         this.pnl=pnl;
+        this.vwap=vwap;
         this.current_price = current_price;
       }
     },

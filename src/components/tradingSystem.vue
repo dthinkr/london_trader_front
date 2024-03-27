@@ -16,7 +16,11 @@
         </v-card>
         <v-spacer></v-spacer>
 
-        <!-- Current price -->
+        <v-card class="mx-2" outlined>
+          <v-card-text>
+            VWAP: <span>{{ formatNumber(vwap) }}</span>
+          </v-card-text>
+        </v-card>
         <v-card class="mx-2" outlined>
           <v-card-text>
             PnL: <span>{{ pnl }}</span>
@@ -38,9 +42,8 @@
         <v-card class="mx-2" outlined>
           <v-card-text>
             Shares:
-            <Transition enter-active-class="fade-in-highlight">
-              <span :key="shares">{{ shares }}</span></Transition
-            >
+            
+              <span :key="shares">{{ shares }}</span> 
           </v-card-text>
         </v-card>
 
@@ -48,9 +51,9 @@
         <v-card class="mx-2" outlined>
           <v-card-text>
             Cash:
-            <Transition enter-active-class="fade-in-highlight">
+         
               <span :key="cash">{{ cash }}</span>
-            </Transition>
+           
           </v-card-text>
         </v-card>
 
@@ -116,7 +119,7 @@ import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 import { watch } from "vue";
 const { initializeTrader } = useTraderStore();
-const { gameParams, spread, shares, cash, current_price, dayOver, pnl } =
+const { gameParams, spread, shares, cash, current_price, dayOver, pnl, vwap } =
   storeToRefs(useTraderStore());
 
 const remainingTime = computed(() => {
