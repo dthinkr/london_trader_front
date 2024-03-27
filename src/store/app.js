@@ -7,7 +7,7 @@ const wsROOT = "ws://localhost:8000/trader";
 function findMidpoint(bids, asks) {
   // Ensure the arrays are not empty
   if (!bids.length || !asks.length) {
-    console.error('One or both arrays are empty.');
+    console.debug('One or both arrays are empty.');
     return 0; // Or any other default value you deem appropriate
   }
 
@@ -27,6 +27,7 @@ export const useTraderStore = defineStore("trader", {
   state: () => ({
     dayOver: false,
     midPoint: 0,
+    pnl:0,
     tradingSessionData: {},
     extraParams: [
       {
@@ -196,6 +197,7 @@ export const useTraderStore = defineStore("trader", {
         inventory,
         current_price,
         trader_orders,
+        pnl,
       } = data;
       if (trader_orders && trader_orders.length > 0) {
         trader_orders.forEach((order) => {
@@ -228,7 +230,7 @@ export const useTraderStore = defineStore("trader", {
 
         this.history = history;
         this.spread = spread;
-
+        this.pnl=pnl;
         this.current_price = current_price;
       }
     },
