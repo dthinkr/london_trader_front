@@ -76,6 +76,8 @@ export const useTraderStore = defineStore("trader", {
     spread: null,
     shares: 0,
     cash: 0,
+    sum_dinv: 0,
+    initial_shares: 0,
     current_price: null,
     myOrders: [],
     showSnackbar: false,
@@ -176,7 +178,9 @@ export const useTraderStore = defineStore("trader", {
         inventory,
         trader_orders,
         pnl,
-        vwap
+        vwap,
+        sum_dinv,
+        initial_shares,
       } = data;
       const market_level_data = {
         transaction_price,
@@ -202,6 +206,8 @@ export const useTraderStore = defineStore("trader", {
         const { bids, asks } = order_book;
         this.myOrders = trader_orders;
         this.bidData = bids;
+        this.sum_dinv = sum_dinv;
+        this.initial_shares = initial_shares;
         this.askData = asks;
         this.midPoint = midpoint || findMidpoint(bids, asks);
         this.chartData = [

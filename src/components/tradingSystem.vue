@@ -30,9 +30,14 @@
         <v-card class="mx-2" outlined>
           <v-card-text>
             Shares:
-            <Transition enter-active-class="fade-in-highlight">
-              <span :key="shares">{{ shares }}</span>
-            </Transition>
+
+            <span>
+              <span>{{ initial_shares }}</span>
+              <Transition enter-active-class="fade-in-highlight" :key="shares">
+                <v-badge color="error" :content="formatDelta" inline></v-badge>
+              </Transition>
+            </span>
+
           </v-card-text>
         </v-card>
 
@@ -107,7 +112,7 @@ import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 import { watch } from "vue";
 const { initializeTrader } = useTraderStore();
-const { gameParams, spread, shares, cash, current_price, dayOver, pnl, vwap } =
+const { gameParams, spread, shares, cash, sum_dinv, initial_shares, dayOver, pnl, vwap } =
   storeToRefs(useTraderStore());
 
 const remainingTime = computed(() => {
@@ -117,6 +122,13 @@ const remainingTime = computed(() => {
 });
 onMounted(() => {
   initializeTrader(props.traderUuid);
+});
+const formatDelta = computed(() => {
+
+  if (sum_dinv == undefined) {
+    return "";
+  }
+  return sum_dinv.value >= 0 ? "+" + sum_dinv.value : sum_dinv.value;
 });
 
 const finalizingDay = () => {
