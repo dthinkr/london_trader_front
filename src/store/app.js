@@ -211,15 +211,16 @@ export const useTraderStore = defineStore("trader", {
         this.askData = asks;
         this.midPoint = midpoint || findMidpoint(bids, asks);
         this.chartData = [
-          {
-            name: "Asks",
-            color: "red",
-            data: asks,
-          },
+
           {
             name: "Bids",
             color: "blue",
             data: bids,
+          },
+          {
+            name: "Asks",
+            color: "red",
+            data: asks,
           },
         ];
 

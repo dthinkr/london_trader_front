@@ -62,7 +62,7 @@
             <BidAskChart />
           </v-col>
           <v-col lg="6" sm="12">
-            <HistoryChart />
+
           </v-col>
         </v-row>
         <v-row class="equal-height-columns">
@@ -98,7 +98,7 @@ const props = defineProps({
 import commandTool from "@/components/commandToolBar.vue";
 import myOrdersTable from "@/components/myOrders.vue";
 import BidAskChart from "@/components/BidAskChart.vue";
-import HistoryChart from "@/components/HistoryChart.vue";
+//import HistoryChart from "@/components/HistoryChart.vue";
 import sellingBlock from "./sellingBlock.vue";
 import messageBlock from "./messageBlock.vue";
 import staticInfoBlock from "./staticInfoBlock.vue";
