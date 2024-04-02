@@ -38,8 +38,17 @@ const chartOptions = reactive({
     }]
   }], // Add annotations to the chart
   xAxis: {
+    allowDecimals: false,
+    tickInterval: 1, // Sets the interval between ticks on the x-axis
+    minPadding: 0.1, // Adds 10% padding on the left side of the x-axis
+    maxPadding: 0.1,   // Adds 10% padding on the right side of the x-axis
     labels: {
       format: "{value:.2f}", // Rounds to two decimal places for xAxis labels
+    },
+    labels: {
+      formatter: function () {
+        return Math.round(this.value).toString(); // Round to nearest integer and convert to string
+      }
     },
     plotBands: [{
       from: -Infinity, // Starting at the leftmost part of the chart

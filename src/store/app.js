@@ -160,6 +160,7 @@ export const useTraderStore = defineStore("trader", {
         const response = await axios.get(`${httpUrl}trader/${traderUuid}`);
         console.debug(response.data.data);
         this.gameParams = response.data.data;
+
         this.initializeWebSocket();
       } catch (error) {
         console.error(error);
@@ -205,22 +206,25 @@ export const useTraderStore = defineStore("trader", {
       if (order_book) {
         const { bids, asks } = order_book;
         this.myOrders = trader_orders;
-        this.bidData = bids;
+        // console.debug(this.gameParams.depth_book_shown, "depth_book_shown")
+        const depth_book_shown = this.gameParams.depth_book_shown || 3;
+        this.bidData = bids.slice(0, depth_book_shown);
+        this.askData = asks.slice(0, depth_book_shown);
         this.sum_dinv = sum_dinv;
         this.initial_shares = initial_shares;
-        this.askData = asks;
+
         this.midPoint = midpoint || findMidpoint(bids, asks);
         this.chartData = [
 
           {
             name: "Bids",
             color: "blue",
-            data: bids,
+            data: this.bidData,
           },
           {
             name: "Asks",
             color: "red",
-            data: asks,
+            data: this.askData,
           },
         ];
 
