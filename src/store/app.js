@@ -27,59 +27,29 @@ export const useTraderStore = defineStore("trader", {
   state: () => ({
     dayOver: false,
     midPoint: 0,
-    pnl:0,
+    pnl: 0,
     vwap: 0,
     tradingSessionData: {},
     extraParams: [
       {
-        var_name: "totalTransactions",
-        display_name: "Total Amount of Transactions (24h)",
-        explanation:
-          "Shows the total volume of trades executed within the last 24 hours, indicating overall market activity.",
-        treatment: true,
+        var_name: 'transaction_price',
+        display_name: 'Transaction price',
+        explanation: 'Price of the last transaction',
+        value: null
       },
       {
-        var_name: "stdDeviationLast10",
-        display_name: "Standard Deviation of the Last 10 Transactions",
-        explanation:
-          "Represents the volatility of the market by calculating the standard deviation of the prices in the last 10 transactions.",
-        treatment: false,
+        var_name: 'spread',
+        display_name: 'Spread',
+        explanation: 'Difference between the best bid and best ask',
+        value: null
       },
       {
-        var_name: "orderBookVolume",
-        display_name: "Total Amount of Bids and Asks",
-        explanation:
-          "Provides a snapshot of market sentiment and liquidity by showing how many buy and sell orders are open.",
-        treatment: true,
+        var_name: 'midpoint',
+        display_name: 'Midpoint',
+        explanation: 'Midpoint between the best bid and best ask',
+        value: null
       },
-      {
-        var_name: "averageTransactionSize",
-        display_name: "Average Transaction Size (24h)",
-        explanation:
-          "Calculated as the total transaction volume divided by the number of transactions over the last 24 hours.",
-        treatment: false,
-      },
-      {
-        var_name: "executedVsSubmittedRatio",
-        display_name: "Executed to Submitted Orders Ratio (24h)",
-        explanation:
-          "Shows how many orders were filled versus placed, indicating market activity and depth.",
-        treatment: false,
-      },
-      {
-        var_name: "bidAskSpread",
-        display_name: "Current Spread Between Highest Bid and Lowest Ask",
-        explanation:
-          "Measures the difference between the highest buy price and the lowest sell price, indicating market liquidity.",
-        treatment: true,
-      },
-      {
-        var_name: "orderBookImbalance",
-        display_name: "Order Book Imbalance",
-        explanation:
-          "Quantifies the ratio of the total volume of bids to asks, indicating whether the market sentiment leans towards buying or selling.",
-        treatment: true,
-      },
+
     ],
     step: 1000,
     traderUuid: null,
@@ -146,6 +116,12 @@ export const useTraderStore = defineStore("trader", {
     },
   },
   actions: {
+    updateExtraParams(data) {
+      this.extraParams = this.extraParams.map(param => ({
+        ...param,
+        value: data[param.var_name] !== undefined ? data[param.var_name].toString() : param.value,
+      }));
+    },
     async initializeTradingSystem(formState) {
       const httpUrl = import.meta.env.VITE_HTTP_URL;
       try {
@@ -164,7 +140,7 @@ export const useTraderStore = defineStore("trader", {
         // Handle error appropriately
       }
     },
- async getTradingSessionData(tradingSessionUUID){
+    async getTradingSessionData(tradingSessionUUID) {
       const httpUrl = import.meta.env.VITE_HTTP_URL;
       try {
         const response = await axios.get(`${httpUrl}trading_session/${tradingSessionUUID}`);
@@ -173,7 +149,7 @@ export const useTraderStore = defineStore("trader", {
       } catch (error) {
         console.error(error);
       }
- },
+    },
     async initializeTrader(traderUuid) {
       console.debug("Initializing trader");
       this.traderUuid = traderUuid;
@@ -188,19 +164,30 @@ export const useTraderStore = defineStore("trader", {
       }
 
 
-      
+
     },
     handle_update(data) {
       const {
         order_book,
         history,
         spread,
+        midpoint,
+        transaction_price,
         inventory,
-        current_price,
         trader_orders,
         pnl,
         vwap
       } = data;
+      const market_level_data = {
+        transaction_price,
+        midpoint,
+        spread
+      };
+
+      // Call updateExtraParams to update only the specified parameters
+      this.updateExtraParams(market_level_data);
+
+
       if (trader_orders && trader_orders.length > 0) {
         trader_orders.forEach((order) => {
           order.status = "active";
@@ -216,7 +203,7 @@ export const useTraderStore = defineStore("trader", {
         this.myOrders = trader_orders;
         this.bidData = bids;
         this.askData = asks;
-        this.midPoint = findMidpoint(bids, asks);
+        this.midPoint = midpoint || findMidpoint(bids, asks);
         this.chartData = [
           {
             name: "Asks",
@@ -232,9 +219,9 @@ export const useTraderStore = defineStore("trader", {
 
         this.history = history;
         this.spread = spread;
-        this.pnl=pnl;
-        this.vwap=vwap;
-        this.current_price = current_price;
+        this.pnl = pnl;
+        this.vwap = vwap;
+
       }
     },
 

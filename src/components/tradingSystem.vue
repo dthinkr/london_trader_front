@@ -4,11 +4,7 @@
       <v-toolbar flat dense>
         <v-card class="mx-3">
           <v-card-text>
-            <vue-countdown
-              v-if="remainingTime"
-              :time="remainingTime"
-              v-slot="{ days, hours, minutes, seconds }"
-            >
+            <vue-countdown v-if="remainingTime" :time="remainingTime" v-slot="{ days, hours, minutes, seconds }">
               Time Remaining:
               {{ minutes }} minutes, {{ seconds }} seconds.
             </vue-countdown>
@@ -26,24 +22,17 @@
             PnL: <span>{{ pnl }}</span>
           </v-card-text>
         </v-card>
-        <v-card class="mx-2" outlined>
-          <v-card-text>
-            Current price: <span>{{ formatNumber(current_price) }}</span>
-          </v-card-text>
-        </v-card>
+
         <!-- Spread -->
-        <v-card class="mx-2" outlined>
-          <v-card-text>
-            Spread: <span v-if="spread">{{ formatNumber(spread) }}</span>
-          </v-card-text>
-        </v-card>
+
 
         <!-- Shares -->
         <v-card class="mx-2" outlined>
           <v-card-text>
             Shares:
-            
-              <span :key="shares">{{ shares }}</span> 
+            <Transition enter-active-class="fade-in-highlight">
+              <span :key="shares">{{ shares }}</span>
+            </Transition>
           </v-card-text>
         </v-card>
 
@@ -51,9 +40,9 @@
         <v-card class="mx-2" outlined>
           <v-card-text>
             Cash:
-         
+            <Transition enter-active-class="fade-in-highlight">
               <span :key="cash">{{ cash }}</span>
-           
+            </Transition>
           </v-card-text>
         </v-card>
 
@@ -80,21 +69,20 @@
           </v-col>
         </v-row>
       </v-container>
+
     </v-main>
-    <v-navigation-drawer
-      app
-      fixed
-      location="right"
-      permanent
-      width="350"
-      :border="false"
-      :rail="false"
-    >
+    <!-- bottom fixed bar -->
+
+    <v-navigation-drawer app fixed location="right" permanent width="350" :border="false" :rail="false">
       <div class="flex-container mr-3">
         <messageBlock class="flex-child my-3"></messageBlock>
         <staticInfoBlock class="flex-child my-3"></staticInfoBlock>
       </div>
     </v-navigation-drawer>
+
+    <v-footer app>
+      <v-alert class="info" color="warning">Your goal is: <b>sell XXX shares more</b></v-alert>
+    </v-footer>
   </v-app>
 </template>
 
@@ -157,31 +145,38 @@ watch(
 );
 </script>
 <style scoped>
-.equal-height-columns > .v-col {
+.equal-height-columns>.v-col {
   display: flex;
   flex: 1;
 }
 </style>
 <style scoped>
 .flex-container {
-  height: 100%; /* Ensure the flex container fills the entire drawer */
+  height: 100%;
+  /* Ensure the flex container fills the entire drawer */
   display: flex;
-  flex-direction: column; /* Stack children vertically */
+  flex-direction: column;
+  /* Stack children vertically */
 }
 
 .flex-child {
-  flex: 1; /* Each child will take up equal space */
-  overflow: auto; /* Add scroll if content overflows */
+  flex: 1;
+  /* Each child will take up equal space */
+  overflow: auto;
+  /* Add scroll if content overflows */
 }
+
 @keyframes fadeInHighlight {
   0% {
     background-color: yellow;
     opacity: 0;
   }
+
   50% {
     background-color: yellow;
     opacity: 0.5;
   }
+
   100% {
     background-color: transparent;
     opacity: 1;

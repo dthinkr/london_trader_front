@@ -3,7 +3,7 @@
     <v-card-title class="cardtitle">Additional market info</v-card-title>
     <v-card-text style="height: 300px; overflow-y: auto" ref="messageContainer">
       <v-list lines="two">
-        <v-list-item v-for="i, index in infoToShow" :key="i.var_name">
+        <v-list-item v-for="i, index in extraParams" :key="i.var_name">
           {{ i.display_name }}
           <v-tooltip      location="bottom" :text="i.explanation" max-width="300">
             <template v-slot:activator="{ props }">
@@ -11,7 +11,7 @@
             </template>
           </v-tooltip>
           <template v-slot:append  >
-            <v-badge width=50 color="error" :content="randomContents[index]" inline></v-badge>
+            <v-badge width=50 color="error" :content="i.value" inline></v-badge>
 
           </template>
         </v-list-item>
@@ -24,25 +24,13 @@
 import { ref, onMounted, nextTick, reactive, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
-const { gameParams, extraParams } = storeToRefs(useTraderStore());
-const treatment = gameParams.value.extra_info_treatment;
+const {  extraParams } = storeToRefs(useTraderStore());
 
-const infoToShow = computed(() => {
-  return extraParams.value.filter((param) => param.treatment === treatment);
-});
-const randomContents = ref([]);
 
-// Initialize randomContents with a random value for each item in infoToShow
-infoToShow.value.forEach(() => {
-  randomContents.value.push((Math.random() * 1000).toFixed(2));
-});
+
 
 onMounted(() => {
-  setInterval(() => {
-    randomContents.value.forEach((content, index) => {
-      randomContents.value[index] = (Math.random() * 1000).toFixed(2);
-    });
-  }, 1000);
+  
 });
 
 </script>
