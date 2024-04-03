@@ -5,20 +5,17 @@
       <v-toolbar flat dense>
         <v-card class="mx-3">
           <v-card-text>
-            <v-btn
-          color="primary"
-          :to="{ name: 'CreateTradingSession' }"
-        >
-          Return to Create Session
-        </v-btn>
+            <v-btn color="primary" :to="{ name: 'CreateTradingSession' }">
+              Return to Create Session
+            </v-btn>
           </v-card-text>
         </v-card>
         <v-spacer></v-spacer>
         <!-- Current price -->
-         
-       <!-- button to return back to create-session -->
-       
-        
+
+        <!-- button to return back to create-session -->
+
+
       </v-toolbar>
     </v-app-bar>
     <v-main>
@@ -30,24 +27,20 @@
               {{ tradingSessionData.trading_session_uuid }}
             </h1>
             <!-- Removed the button for copying error message -->
-            <div v-for="ht in tradingSessionData.human_traders" class="my-3 d-flex align-center">
-              Trader  &nbsp; <b>{{ ht }}</b
-              >: 
-              <!-- v-text-field to display the link -->
-              <v-text-field
-                :value="`${getBaseURL()}/trader/${ht}`"
-                readonly
-                outlined
-                append-inner-icon="mdi-content-copy"
-                @click:append-inner="
-                  copyToClipBoard(`${getBaseURL()}/trader/${ht}`)
-                "
-              ></v-text-field>
-              <!-- let's also insert link here -->
-              <v-btn :to="`/trader/${ht}`" color="primary" outlined class="mx-3" size="small"
-                target="_blank"
-                >View trader</v-btn>
-              
+            <div v-for="(ht, ind) in tradingSessionData.human_traders" class="my-3 d-flex align-center" :key="ind">
+              Trader &nbsp; <b>{{ ind + 1 }}</b>:
+
+
+
+              <v-text-field :value="`${getBaseURL()}/trader/${ht.id}`" readonly outlined
+                append-inner-icon="mdi-content-copy" @click:append-inner="
+              copyToClipBoard(`${getBaseURL()}/trader/${ht.id}`)
+              "></v-text-field>
+              <v-sheet width="100" :elevation="7" :width="100" border rounded class="m-1 p-1">Goal: <b>{{ ht.goal
+                  }}</b></v-sheet>
+              <v-btn :to="`/trader/${ht.id}`" color="primary" outlined class="mx-3" size="small" target="_blank">View
+                trader</v-btn>
+
             </div>
           </v-col>
         </v-row>
@@ -82,8 +75,10 @@ const getBaseURL = () => {
 <style scoped>
 .d-flex {
   display: flex;
-  align-items: center; /* This vertically centers the inline items */
+  align-items: center;
+  /* This vertically centers the inline items */
 }
+
 .flex-grow-1 {
   flex-grow: 1;
 }
