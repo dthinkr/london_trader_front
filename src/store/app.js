@@ -84,6 +84,23 @@ export const useTraderStore = defineStore("trader", {
     snackbarText: "",
   }),
   getters: {
+    goalMessage: (state) => {
+      if (state.gameParams.goal === 0) return null;
+
+
+      const goalAmount = state.gameParams.goal;
+      const successVerb = state.gameParams.goal > 0 ? 'buying' : 'selling';
+      const currentDelta = goalAmount - state.sum_dinv;
+      const remaining = Math.abs(currentDelta);
+      const shareWord = remaining === 1 ? 'share' : 'shares';
+
+      const action = currentDelta > 0 ? 'buy' : 'sell';
+      console.debug('goalAmount', goalAmount, 'successVerb', successVerb, 'currentDelta', currentDelta, 'remaining', remaining, 'shareWord', shareWord, 'action', action)
+      if (remaining == 0) return { text: `You have reached your goal of ${successVerb} ${Math.abs(goalAmount)} shares`, type: 'success' };
+
+
+      return { text: `You need to ${action} ${remaining}  ${shareWord} to reach your goal`, type: 'warning' };
+    },
     ws_path: (state) => {
       return `${import.meta.env.VITE_WS_URL}trader/${state.traderUuid}`;
     },
@@ -119,6 +136,7 @@ export const useTraderStore = defineStore("trader", {
   },
   actions: {
     updateExtraParams(data) {
+
       this.extraParams = this.extraParams.map(param => ({
         ...param,
         value: data[param.var_name] !== undefined ? data[param.var_name].toString() : param.value,
@@ -183,14 +201,17 @@ export const useTraderStore = defineStore("trader", {
         sum_dinv,
         initial_shares,
       } = data;
-      const market_level_data = {
-        transaction_price,
-        midpoint,
-        spread
-      };
 
+      if (transaction_price && midpoint && spread) {
+        const market_level_data = {
+          transaction_price,
+          midpoint,
+          spread
+        };
+        this.updateExtraParams(market_level_data);
+      }
       // Call updateExtraParams to update only the specified parameters
-      this.updateExtraParams(market_level_data);
+
 
 
       if (trader_orders && trader_orders.length > 0) {
@@ -252,7 +273,7 @@ export const useTraderStore = defineStore("trader", {
 
           if (json_data) {
             const newMessage = json_data;
-            console.debug("message", newMessage);
+            // console.debug("message", newMessage);
             // todo.philipp: ideally we MAY think about passing a dynamic handler
             // but for now we just update the incoming data. for most of the cases this is enough
             if (newMessage.type === "closure") {

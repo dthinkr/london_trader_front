@@ -62,7 +62,7 @@
             <BidAskChart />
           </v-col>
           <v-col lg="6" sm="12">
-
+            <HistoryChart></HistoryChart>
           </v-col>
         </v-row>
         <v-row class="equal-height-columns">
@@ -86,7 +86,9 @@
     </v-navigation-drawer>
 
     <v-footer app>
-      <v-alert class="info" color="warning">Your goal is: <b>sell XXX shares more</b></v-alert>
+      <v-alert v-if="goalMessage" :class="goalMessage.type" :color="goalMessage.type">
+        <b>{{ goalMessage.text }}</b>
+      </v-alert>
     </v-footer>
   </v-app>
 </template>
@@ -98,7 +100,7 @@ const props = defineProps({
 import commandTool from "@/components/commandToolBar.vue";
 import myOrdersTable from "@/components/myOrders.vue";
 import BidAskChart from "@/components/BidAskChart.vue";
-//import HistoryChart from "@/components/HistoryChart.vue";
+import HistoryChart from "@/components/HistoryChart.vue";
 import sellingBlock from "./sellingBlock.vue";
 import messageBlock from "./messageBlock.vue";
 import staticInfoBlock from "./staticInfoBlock.vue";
@@ -112,7 +114,7 @@ import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 import { watch } from "vue";
 const { initializeTrader } = useTraderStore();
-const { gameParams, spread, shares, cash, sum_dinv, initial_shares, dayOver, pnl, vwap } =
+const { gameParams, goalMessage, shares, cash, sum_dinv, initial_shares, dayOver, pnl, vwap } =
   storeToRefs(useTraderStore());
 
 const remainingTime = computed(() => {
