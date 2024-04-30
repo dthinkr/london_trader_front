@@ -214,11 +214,23 @@ export const useTraderStore = defineStore("trader", {
 
 
 
+
+      const orderTypeMapping = {
+        '-1': 'ask',
+        '1': 'bid'
+      };
       if (trader_orders && trader_orders.length > 0) {
-        trader_orders.forEach((order) => {
-          order.status = "active";
-        });
+        const remappedOrders = trader_orders.map(order => ({
+          ...order,
+          order_type: orderTypeMapping[order.order_type.toString()],
+          status: 'active'
+        }));
+        console.debug('OLD ORDERS', trader_orders, 'NEW ORDERS', remappedOrders)
+        this.myOrders = remappedOrders;
       }
+
+
+
       if (inventory) {
         const { shares, cash } = inventory;
         this.shares = shares;
@@ -226,7 +238,7 @@ export const useTraderStore = defineStore("trader", {
       }
       if (order_book) {
         const { bids, asks } = order_book;
-        this.myOrders = trader_orders;
+
         // console.debug(this.gameParams.depth_book_shown, "depth_book_shown")
         const depth_book_shown = this.gameParams.depth_book_shown || 3;
         this.bidData = bids.slice(0, depth_book_shown);
