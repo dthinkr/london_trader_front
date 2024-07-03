@@ -29,6 +29,9 @@ export const useTraderStore = defineStore("trader", {
     midPoint: 0,
     pnl: 0,
     vwap: 0,
+    currentTime: null,
+    isTradingStarted: false,
+    remainingTime: null,
     tradingSessionData: {},
     extraParams: [
       {
@@ -188,6 +191,18 @@ export const useTraderStore = defineStore("trader", {
 
     },
     handle_update(data) {
+      if (data.type === "time_update") {
+        console.log("data:", data);
+        this.$patch({
+          currentTime: new Date(data.data.current_time),
+          isTradingStarted: data.data.is_trading_started,
+          remainingTime: data.data.remaining_time
+        });
+        console.log("currentTime:", this.currentTime);
+        console.log("isTradingStarted:", this.isTradingStarted);
+        console.log("remainingTime:", this.remainingTime);
+        return;
+      }
       const {
         order_book,
         history,
@@ -201,7 +216,7 @@ export const useTraderStore = defineStore("trader", {
         sum_dinv,
         initial_shares,
       } = data;
-
+    
       if (transaction_price && midpoint && spread) {
         const market_level_data = {
           transaction_price,
@@ -210,11 +225,7 @@ export const useTraderStore = defineStore("trader", {
         };
         this.updateExtraParams(market_level_data);
       }
-      // Call updateExtraParams to update only the specified parameters
-
-
-
-
+    
       const orderTypeMapping = {
         '-1': 'ask',
         '1': 'bid'
@@ -228,27 +239,23 @@ export const useTraderStore = defineStore("trader", {
         console.debug('OLD ORDERS', trader_orders, 'NEW ORDERS', remappedOrders)
         this.myOrders = remappedOrders;
       }
-
-
-
+    
       if (inventory) {
         const { shares, cash } = inventory;
         this.shares = shares;
         this.cash = cash;
       }
+    
       if (order_book) {
         const { bids, asks } = order_book;
-
-        // console.debug(this.gameParams.depth_book_shown, "depth_book_shown")
         const depth_book_shown = this.gameParams.depth_book_shown || 3;
         this.bidData = bids.slice(0, depth_book_shown);
         this.askData = asks.slice(0, depth_book_shown);
         this.sum_dinv = sum_dinv;
         this.initial_shares = initial_shares;
-
+    
         this.midPoint = midpoint || findMidpoint(bids, asks);
         this.chartData = [
-
           {
             name: "Bids",
             color: "blue",
@@ -260,12 +267,11 @@ export const useTraderStore = defineStore("trader", {
             data: this.askData,
           },
         ];
-
+    
         this.history = history;
         this.spread = spread;
         this.pnl = pnl;
         this.vwap = vwap;
-
       }
     },
 
