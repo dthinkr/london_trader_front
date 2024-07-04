@@ -3,18 +3,25 @@ import CreateTradingSession from "@/components/createTradingSession.vue";
 import TradingSystem from "@/components/tradingSystem.vue";
 import AdminPage from "@/components/AdminPage.vue";
 import dayOver from "@/components/dayOver.vue";
+import TraderLanding from "@/components/TraderLanding.vue";  // added landing page
 import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
 
 const routes = [
   {
     path: "/",
-    redirect: "/create-trading-session", // Redirect from root to CreateTrader
+    redirect: "/create-trading-session",
   },
   {
     path: "/create-trading-session",
     name: "CreateTradingSession",
     component: CreateTradingSession,
+  },
+  {
+    path: "/trader/:traderUuid/landing",  // added landing page
+    name: "TraderLanding",
+    component: TraderLanding,
+    props: true,
   },
   {
     path: "/trader/:traderUuid",
@@ -28,7 +35,6 @@ const routes = [
     component: dayOver,
     props: true,
   },
-  // let's add a component for showing admin page
   {
     path: "/admin/:tradingSessionUUID",
     component: AdminPage,
