@@ -1,6 +1,5 @@
 <template>
   <div class="card-content">
-    <h2 class="text-h3 font-weight-bold mb-6 primary--text">Control Questions</h2>
 
     <v-card class="mb-6" elevation="3" shaped>
       <v-card-title class="text-h5 font-weight-bold primary--text">
@@ -28,17 +27,18 @@
         Calculation Questions
       </v-card-title>
       <v-card-text>
-        <v-list two-line>
+        <v-list>
           <v-list-item v-for="(question, index) in calculationQuestions" :key="index">
             <v-list-item-content>
               <v-list-item-title class="text-h5 mb-2 wrap-text">{{ question.text }}</v-list-item-title>
-              <v-text-field
-                v-model="question.answer"
-                label="Your answer"
-                suffix="Lira"
-                outlined
-                dense
-              ></v-text-field>
+              <v-radio-group v-model="question.answer" column>
+                <v-radio
+                  v-for="(option, optionIndex) in question.options"
+                  :key="optionIndex"
+                  :label="option"
+                  :value="option"
+                ></v-radio>
+              </v-radio-group>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -71,18 +71,14 @@ const trueOrFalseQuestions = ref([
 
 const calculationQuestions = ref([
   { 
-    text: `Let us assume a market is selected in which you had the task of selling all your 10 shares 
-           and you received 50 Lira at the start. You sold all the 10 shares for an average price of 11. 
-           The price at the beginning of the market was 12. What would be your earnings in Lira at the 
-           end of this market?`,
-    answer: null 
+    text: `Let us assume a market is selected in which you had the task of selling all your 10 shares and you received 50 Lira at the start. You sold all the 10 shares for an average price of 11. The price at the beginning of the market was 12. What would be your earnings in Lira at the end of this market?`,
+    answer: null,
+    options: ['100 Lira', '110 Lira', '120 Lira', '500 Lira']
   },
   { 
-    text: `Let us assume a market is selected in which you had the task of buying 10 shares and you 
-           received 60 Lira at the start. You bought 10 shares for an average price of 11. The price 
-           at the beginning of the market was 10. What would be your earnings in Lira at the end of 
-           this market?`,
-    answer: null 
+    text: `Let us assume a market is selected in which you had the task of buying 10 shares and you received 60 Lira at the start. You bought 10 shares for an average price of 11. The price at the beginning of the market was 10. What would be your earnings in Lira at the end of this market?`,
+    answer: null,
+    options: ['100 Lira', '110 Lira', '120 Lira', '600 Lira']
   },
 ]);
 </script>

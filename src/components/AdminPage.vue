@@ -51,6 +51,8 @@ const props = defineProps({
 
 const { tradingSessionData } = storeToRefs(useTraderStore());
 
+console.log(tradingSessionData.value)
+
 onMounted(() => {
   useTraderStore().getTradingSessionData(props.tradingSessionUUID);
 });

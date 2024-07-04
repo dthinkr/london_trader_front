@@ -1,6 +1,5 @@
 <template>
   <div class="card-content">
-    <h2 class="text-h3 font-weight-bold mb-6 primary--text">Other Participants in the Market</h2>
 
     <v-card class="mb-6" elevation="3" shaped color="secondary" dark>
       <v-card-title class="text-h5 font-weight-bold">

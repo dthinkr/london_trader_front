@@ -1,7 +1,5 @@
 <template>
-  <div class="card-content">
-    <h2 class="text-h3 font-weight-bold mb-6 primary--text">Trading Platform</h2>
-    
+  <div class="card-content">    
     <v-card class="mb-6" elevation="3" shaped>
       <v-card-title class="text-h5 font-weight-bold primary--text">
         <v-icon left color="primary">mdi-desktop-mac</v-icon>
@@ -61,7 +59,7 @@
             <v-list-item-icon>
               <v-icon color="success">mdi-arrow-down</v-icon>
             </v-list-item-icon>
-            <v-list-item-content class="text-h5">
+            <v-list-item-content class="text-h6">
               Place an order to sell (ask) a share for a lower price than the current best ask (selling price)
             </v-list-item-content>
           </v-list-item>
@@ -69,7 +67,7 @@
             <v-list-item-icon>
               <v-icon color="error">mdi-arrow-up</v-icon>
             </v-list-item-icon>
-            <v-list-item-content class="text-h5">
+            <v-list-item-content class="text-h6">
               Place an order to buy (bid) a share for a higher price than the current best bid (buying price)
             </v-list-item-content>
           </v-list-item>

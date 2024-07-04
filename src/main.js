@@ -1,12 +1,12 @@
 import { createApp } from 'vue'
 import { createVuetify } from 'vuetify'
 import { registerPlugins } from '@/plugins'
-import 'animate.css'
 import App from './App.vue'
 import VueCountdown from '@chenfengyuan/vue-countdown'
 
 // Import Vuetify styles
 import 'vuetify/styles'
+import 'animate.css'
 
 const myCustomLightTheme = {
   dark: false,

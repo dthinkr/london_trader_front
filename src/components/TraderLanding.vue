@@ -10,11 +10,26 @@
               class="elevation-4 card-stack"
               :class="{ 'card-active': index === currentPageIndex }"
             >
-              <v-card-title class="text-h2 font-weight-bold text-center py-6">
-                Page {{ index + 1 }}
-              </v-card-title>
               <v-card-text>
-                <component :is="component" />
+                <v-container class="pa-0">
+                  <v-row no-gutters>
+                    <v-col cols="12">
+                      <v-sheet
+                        color="primary"
+                        class="pa-12 mb-6"
+                        rounded="lg"
+                        elevation="4"
+                      >
+                        <h1 class="text-h2 font-weight-bold text-center white--text">
+                          {{ index + 1 }}: {{ pageTitles[index] }}
+                        </h1>
+                      </v-sheet>
+                    </v-col>
+                    <v-col cols="12">
+                      <component :is="component" :goal="playerGoal" />
+                    </v-col>
+                  </v-row>
+                </v-container>
               </v-card-text>
             </v-card>
           </v-col>
@@ -25,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
 
@@ -43,22 +58,38 @@ const props = defineProps({
 });
 
 const traderStore = useTraderStore();
-const { gameParams } = storeToRefs(traderStore);
+const { gameParams, tradingSessionData } = storeToRefs(traderStore);
+
+const playerGoal = computed(() => {
+  const trader = tradingSessionData.value?.human_traders?.find(t => t.id === props.traderUuid);
+  return trader ? trader.goal : '';
+});
+
+onMounted(async () => {
+  if (props.traderUuid) {
+    await traderStore.getTradingSessionData(props.traderUuid);
+  }
+});
 
 const currentPageIndex = ref(0);
-const scrollThreshold = 50;
+const scrollThreshold = 1200; 
 let lastScrollTime = 0;
+let accumulatedDelta = 0;
 
 const handleScroll = (event) => {
   const now = new Date().getTime();
   if (now - lastScrollTime < 500) return;
 
-  if (event.deltaY > scrollThreshold && currentPageIndex.value < pageComponents.length - 1) {
+  accumulatedDelta += event.deltaY;
+
+  if (accumulatedDelta > scrollThreshold && currentPageIndex.value < pageComponents.length - 1) {
     currentPageIndex.value++;
     lastScrollTime = now;
-  } else if (event.deltaY < -scrollThreshold && currentPageIndex.value > 0) {
+    accumulatedDelta = 0;
+  } else if (accumulatedDelta < -scrollThreshold && currentPageIndex.value > 0) {
     currentPageIndex.value--;
     lastScrollTime = now;
+    accumulatedDelta = 0;
   }
 };
 
@@ -73,13 +104,25 @@ const pageComponents = [
   Page8,
 ].filter(component => component);
 
+const pageTitles = [
+  "Welcome",
+  "Trading Platform",
+  "Setup",
+  "Your Earnings (Selling)",
+  "Your Earnings (Buying)",
+  "Other Participants in the Market",
+  "Control Questions",
+  "Practice"
+];
+
 const duration = computed(() => gameParams.value.duration || '#');
 const numMarkets = computed(() => gameParams.value.num_rounds || '#');
+console.log(Object.keys(tradingSessionData.value));
 </script>
 
 <style>
 :root {
-  --base-font-size: 14px;
+  --base-font-size: 12px;
 }
 
 .card-content {

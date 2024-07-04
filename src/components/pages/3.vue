@@ -1,6 +1,5 @@
 <template>
   <div class="card-content">
-    <h2 class="text-h3 font-weight-bold mb-6 primary--text">Setup</h2>
 
     <v-card class="mb-6" elevation="3" shaped>
       <v-card-text class="text-h5">
