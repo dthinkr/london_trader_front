@@ -23,7 +23,7 @@
           </v-card-text>
           <v-card-actions class="justify-center pa-4">
             <v-btn color="primary" large @click="goToNextDay">
-              Continue to Next Day
+              Return to Create Session
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -70,9 +70,7 @@ const formatValue = (value) => {
 };
 
 const goToNextDay = () => {
-  // Implement the logic to go to the next day or trading session
-  // For example:
-  // router.push({ name: 'TradingSystem', params: { traderUuid: props.traderUuid } });
+  router.push({ name: 'CreateTradingSession' });
 };
 
 onMounted(fetchTraderInfo);
