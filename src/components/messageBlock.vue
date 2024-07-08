@@ -1,18 +1,23 @@
 <template>
-  <v-card     height="100%"
-      elevation="3" >
-    <v-card-title class="cardtitle">Message Board</v-card-title>
-    <v-card-text style="height: 300px; overflow-y: auto" ref="messageContainer">
+  <v-card height="100%" elevation="3" class="message-board">
+    <v-card-title class="cardtitle">
+      <v-icon left color="white">mdi-bell-outline</v-icon>
+      Market Updates
+    </v-card-title>
+    <v-card-text class="message-container" ref="messageContainer">
       <v-container>
-        <div id="goto-container-example">
-          <TransitionGroup name="message" tag="div" class="messages-container">
+        <TransitionGroup name="message" tag="div" class="messages-container">
           <div 
-            class="message animate__animated animate__heartBeat"
-            v-for="(message, index) in messages" :key="index" :ref="setRef" :id="`message_${index}`">
+            class="message"
+            v-for="(message, index) in messages" 
+            :key="index" 
+            :ref="setRef" 
+            :id="`message_${index}`"
+          >
+            <v-icon left small :color="getMessageColor(message)" class="mr-2">{{ getMessageIcon(message) }}</v-icon>
             {{ message }}
           </div>
         </TransitionGroup>
-        </div>
       </v-container>
     </v-card-text>
   </v-card>
@@ -20,7 +25,7 @@
 
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
-;
+
 const tradingMessages = [
   "Your buy order for AAPL has been executed.",
   "Market alert: BTC has dropped by 5% in the last hour.",
@@ -47,14 +52,13 @@ const tradingMessages = [
 const messages = ref([]);
 const messageRefs = ref([]);
 
-// Function to collect refs
 const setRef = (el) => {
   if (el) {
     messageRefs.value.push(el);
   }
 };
+
 const addMessage = async () => {
-  // Pick a random message from the tradingMessages array
   const randomMessage = tradingMessages[Math.floor(Math.random() * tradingMessages.length)];
   messages.value.push(randomMessage);
   await nextTick();
@@ -62,51 +66,83 @@ const addMessage = async () => {
 };
 
 const scrollToLastMessage = () => {
-  const lastMessageElement = messageRefs.value.at(-1); // Get the last message element
+  const lastMessageElement = messageRefs.value.at(-1);
   if (lastMessageElement) {
     lastMessageElement.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 };
 
+const getMessageColor = (message) => {
+  if (message.includes("alert") || message.includes("Warning")) return "error";
+  if (message.includes("successful") || message.includes("executed")) return "success";
+  return "primary";
+};
+
+const getMessageIcon = (message) => {
+  if (message.includes("alert") || message.includes("Warning")) return "mdi-alert-circle-outline";
+  if (message.includes("successful") || message.includes("executed")) return "mdi-check-circle-outline";
+  return "mdi-information-outline";
+};
+
 onMounted(() => {
- 
   const n = 4; // Number of seconds between messages
   setInterval(addMessage, n * 1000); 
 });
 </script>
+
 <style scoped>
+.message-board {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+}
+
 .cardtitle {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
-  background: navy;
+  background: linear-gradient(to right, #2c3e50, #34495e);
   color: white;
+  padding: 12px 16px;
 }
-</style>
-<style scoped>
+
+.message-container {
+  height: 300px;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.messages-container {
+  padding: 8px;
+}
+
 .message {
-  background-color: white; /* Soft green background for received messages */
-  border: 1px solid #dce775; /* Light green border */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
-  border-radius: 12px; /* Rounded corners for the bubble look */
-  padding: 8px 12px; /* Comfortable spacing inside the bubble */
-  max-width: 80%; /* Max width to prevent overly wide messages */
-  margin: 8px 0; /* Spacing between messages */
-  word-wrap: break-word; /* Ensure long words don't overflow */
-  display: block; /* Block display to stack messages vertically */
-  position: relative; /* For potential pseudo-elements or positioning */
-  left: 0; /* Align messages to the left */
-  margin-right: auto; /* Ensures margin is applied correctly for alignment */
-  font-size: 0.95rem; /* Adjust font size as needed */
-}
- 
-/* Transition group enter and leave active */
-.message-enter-active, .message-leave-active {
-  transition: background-color 1s;
-}
-.message-enter-from, .message-leave-to {
-  background-color: yellow;
-}
-.message-enter-to, .message-leave-from {
   background-color: white;
+  border-left: 4px solid #3498db;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  word-wrap: break-word;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  transition: all 0.3s ease;
+}
+
+.message:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.message-enter-active, .message-leave-active {
+  transition: all 0.5s ease;
+}
+
+.message-enter-from, .message-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.message-enter-to, .message-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

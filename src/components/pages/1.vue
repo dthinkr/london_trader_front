@@ -1,5 +1,16 @@
 <template>
   <div class="card-content">
+    <v-btn
+      color="success"
+      x-large
+      block
+      @click="startTrading"
+      class="start-trading-btn text-h5 mb-6"
+    >
+      <v-icon left>mdi-play-circle-outline</v-icon>
+      Start Trading
+    </v-btn>
+
     <p class="text-h5 mb-4">
       In this study, we investigate decision-making in financial markets. The following are the instructions for this study. Please follow them carefully.
     </p>
@@ -36,16 +47,6 @@
     >
       In the following pages, you will learn more about the trading platform and how to trade.
     </v-alert>
-    <v-btn
-      color="success"
-      x-large
-      block
-      @click="startTrading"
-      class="start-trading-btn text-h5"
-    >
-      <v-icon left>mdi-play-circle-outline</v-icon>
-      Start Trading
-    </v-btn>
   </div>
 </template>
 

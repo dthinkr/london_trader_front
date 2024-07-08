@@ -1,89 +1,92 @@
 <template>
-    <v-card     height="100%"
-      elevation="3" >
-  <v-card-title class="cardtitle-blue">My Orders</v-card-title>
-  
-  <div id="tablewrapper">
-    <v-data-table
-      id="my-orders-table"
-      items-per-page="-1"
-      ref="dataTable"
-      :headers="headers"
-      :items="myOrders"
-      class="elevation-1 table-fixed-height"
-      :fixed-header="true"
-      sticky
-    >
-      <template #top="{ itemsPerPage, page, start, stop }">
-       
-      </template>
-
-      <template #item.timestamp="{ item }">
-        {{formatTimestamp(item.timestamp) }}
-      </template>
-      <template #item.price="{ item }">
-        {{ formatNumber(item.price) }}
-      </template>
-      <template #bottom="{ item }"> </template>
-      <template v-slot:item.actions="{ item }">
-        <v-icon
-          size="small"
-          @click="item.status === 'active' && cancelItem(item)"
-          :style="
-            item.status !== 'active'
-              ? 'color: grey; cursor: default;'
-              : 'cursor: pointer;'
-          "
-        >
-          mdi-delete
-        </v-icon>
-      </template>
-    </v-data-table>
-  </div>
-  </v-card> 
+  <v-card height="100%" elevation="3" class="my-orders-card">
+    <v-card-title class="cardtitle-primary">
+      <v-icon left>mdi-format-list-bulleted</v-icon>
+      My Orders
+    </v-card-title>
+    
+    <div class="table-wrapper">
+      <v-data-table
+        id="my-orders-table"
+        :headers="headers"
+        :items="myOrders"
+        :items-per-page="-1"
+        :fixed-header="true"
+        dense
+        class="elevation-1"
+      >
+        <template #item.timestamp="{ item }">
+          {{ formatTimestamp(item.timestamp) }}
+        </template>
+        <template #item.price="{ item }">
+          {{ formatNumber(item.price) }}
+        </template>
+        <template #item.status="{ item }">
+          <v-chip
+            :color="getStatusColor(item.status)"
+            small
+            label
+          >
+            {{ item.status }}
+          </v-chip>
+        </template>
+        <template #item.actions="{ item }">
+          <v-btn
+            icon
+            small
+            :disabled="item.status !== 'active'"
+            @click="cancelItem(item)"
+            :color="item.status === 'active' ? 'error' : ''"
+          >
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
+      </v-data-table>
+    </div>
+  </v-card>
 </template>
 
 <script setup>
 import { ref, computed, watch } from "vue";
-import { useGoTo } from "vuetify";
 import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
-const dataTable = ref(null);
-import {useFormatNumber} from '@/composables/utils';
+import { useFormatNumber } from '@/composables/utils';
+
 const { formatNumber } = useFormatNumber();
 const { myOrders } = storeToRefs(useTraderStore());
 const { sendMessage } = useTraderStore();
-const goTo = useGoTo();
-const selectedType = ref('active');
 
 const headers = [
-  { title: "Timestamp", key: "timestamp" },
-  { title: "Type", key: "order_type" },
-  { title: "Price", key: "price" },
-  { title: "Status", key: "status" },
-  { title: "Actions", key: "actions", sortable: false },
+  { title: "Timestamp", key: "timestamp", align: 'start', sortable: true },
+  { title: "Type", key: "order_type", align: 'center', sortable: true },
+  { title: "Price", key: "price", align: 'end', sortable: true },
+  { title: "Status", key: "status", align: 'center', sortable: true },
+  { title: "Actions", key: "actions", align: 'center', sortable: false },
 ];
 
 const formatTimestamp = (timestamp) => {
-  const date = new Date(timestamp );
-  return date.toLocaleString();
+  const date = new Date(timestamp);
+  return date.toLocaleString(undefined, { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit', 
+    second: '2-digit' 
+  });
 };
 
+const getStatusColor = (status) => {
+  switch (status) {
+    case 'active': return 'success';
+    case 'cancelled': return 'error';
+    case 'filled': return 'info';
+    default: return 'grey';
+  }
+};
 
-
-
-const selectedItem = ref(null);
- 
 const cancelItem = (item) => {
-  
   sendMessage("cancel_order", { id: item.id });
-  closeCancel();
-};
-
- 
-const closeCancel = () => {
-  selectedItem.value = null;
-  
 };
 
 watch(
@@ -93,28 +96,54 @@ watch(
   },
   { immediate: true, deep: true }
 );
-
 </script>
 
-<style>
-#tablewrapper {
-  height: 300px;
-  overflow-y: auto;
+<style scoped>
+.my-orders-card {
+  display: flex;
+  flex-direction: column;
 }
-#my-orders-table {
-}
-#my-orders-table .v-data-table__wrapper {
-  overflow-y: auto;
-  height: calc(
-    100% - 60px
-  ); /* Adjust the 60px to the height of your table header */
-}
-#my-orders-table .v-data-table__wrapper > table {
-  height: 300px;
-  overflow-y: auto;
-}
-.cardtitle-blue {
-  background-color: #1976d2;
+
+.cardtitle-primary {
+  background-color: var(--v-primary-base);
   color: white;
+  font-weight: bold;
+  padding: 12px 16px;
+}
+
+.table-wrapper {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+#my-orders-table {
+  height: 100%;
+}
+
+#my-orders-table ::v-deep .v-data-table__wrapper {
+  height: calc(100% - 48px); /* Adjust for header height */
+}
+
+#my-orders-table ::v-deep .v-data-table__wrapper > table {
+  height: 100%;
+}
+
+#my-orders-table ::v-deep .v-data-table__wrapper th {
+  background-color: var(--v-secondary-lighten5);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#my-orders-table ::v-deep .v-data-table__wrapper td {
+  font-size: 0.875rem;
+}
+
+#my-orders-table ::v-deep .v-data-table__wrapper tr:nth-child(even) {
+  background-color: var(--v-secondary-lighten5);
+}
+
+#my-orders-table ::v-deep .v-data-table__wrapper tr:hover {
+  background-color: var(--v-secondary-lighten4);
 }
 </style>
