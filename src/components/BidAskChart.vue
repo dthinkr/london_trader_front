@@ -72,8 +72,10 @@ const chartOptions = reactive({
     maxPadding: 0.1,
     labels: {
       formatter: function () {
-        return Math.round(this.value).toString();
+        return Math.round(this.value + 0.5).toString();
       },
+      align: 'center',
+      x: 0,
       style: {
         color: '#666',
         fontSize: '11px'
@@ -132,7 +134,7 @@ const chartOptions = reactive({
 watch(chartData, (newChartData) => {
   chartOptions.series = newChartData.map(series => ({
     ...series,
-    pointPlacement: series.name === "Bids" ? -0.5 : 0.5,
+    pointPlacement: 0,
     color: series.name === "Bids" ? 'rgba(0, 120, 200, 0.8)' : 'rgba(200, 0, 0, 0.8)',
     borderColor: series.name === "Bids" ? 'rgba(0, 90, 150, 1)' : 'rgba(150, 0, 0, 1)'
   }));
