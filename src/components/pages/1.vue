@@ -32,12 +32,34 @@
       elevation="2"
       colored-border
       icon="mdi-information"
-      class="mt-4 text-h5"
+      class="mt-4 text-h5 mb-6"
     >
       In the following pages, you will learn more about the trading platform and how to trade.
     </v-alert>
+    <v-btn
+      color="success"
+      x-large
+      block
+      @click="startTrading"
+      class="start-trading-btn text-h5"
+    >
+      <v-icon left>mdi-play-circle-outline</v-icon>
+      Start Trading
+    </v-btn>
   </div>
 </template>
+
+<script setup>
+import { useRouter } from 'vue-router';
+import { useTraderStore } from "@/store/app";
+
+const router = useRouter();
+const traderStore = useTraderStore();
+
+const startTrading = () => {
+  router.push({ name: 'TradingSystem', params: { traderUuid: traderStore.traderUuid } });
+};
+</script>
 
 <style scoped>
 .custom-list {
@@ -47,5 +69,13 @@
 
 .custom-list li {
   margin-bottom: 0.5em;
+}
+
+.start-trading-btn {
+  transition: transform 0.2s;
+}
+
+.start-trading-btn:hover {
+  transform: scale(1.02);
 }
 </style>
