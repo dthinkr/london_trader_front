@@ -120,30 +120,30 @@ watch(
   height: 100%;
 }
 
-#my-orders-table ::v-deep .v-data-table__wrapper {
+#my-orders-table :deep(.v-data-table__wrapper) {
   height: calc(100% - 48px); /* Adjust for header height */
 }
 
-#my-orders-table ::v-deep .v-data-table__wrapper > table {
+#my-orders-table :deep(.v-data-table__wrapper > table) {
   height: 100%;
 }
 
-#my-orders-table ::v-deep .v-data-table__wrapper th {
+#my-orders-table :deep(.v-data-table__wrapper th) {
   background-color: var(--v-secondary-lighten5);
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-#my-orders-table ::v-deep .v-data-table__wrapper td {
+#my-orders-table :deep(.v-data-table__wrapper td) {
   font-size: 0.875rem;
 }
 
-#my-orders-table ::v-deep .v-data-table__wrapper tr:nth-child(even) {
+#my-orders-table :deep(.v-data-table__wrapper tr:nth-child(even)) {
   background-color: var(--v-secondary-lighten5);
 }
 
-#my-orders-table ::v-deep .v-data-table__wrapper tr:hover {
+#my-orders-table :deep(.v-data-table__wrapper tr:hover) {
   background-color: var(--v-secondary-lighten4);
 }
 </style>
