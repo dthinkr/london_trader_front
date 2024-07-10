@@ -22,8 +22,11 @@
             </v-list>
           </v-card-text>
           <v-card-actions class="justify-center pa-4">
-            <v-btn color="primary" large @click="goToNextDay">
+            <v-btn color="primary" large @click="goToNextDay" class="mr-2">
               Return to Create Session
+            </v-btn>
+            <v-btn color="secondary" large @click="downloadSessionMetrics">
+              Download Session Metrics
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -33,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from 'vue-router';
 
@@ -71,6 +74,29 @@ const formatValue = (value) => {
 
 const goToNextDay = () => {
   router.push({ name: 'CreateTradingSession' });
+};
+
+const downloadSessionMetrics = async () => {
+  try {
+    const response = await axios.get(`${httpUrl}session_metrics/trader/${props.traderUuid}`, {
+      responseType: 'blob', // Important for handling file downloads
+    });
+    
+    // Create a Blob from the response data
+    const blob = new Blob([response.data], { type: 'text/csv' });
+    
+    // Create a link element and trigger the download
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = `session_metrics_${props.traderUuid}.csv`;
+    link.click();
+    
+    // Clean up
+    window.URL.revokeObjectURL(link.href);
+  } catch (error) {
+    console.error('Failed to download session metrics:', error);
+    // You might want to show an error message to the user here
+  }
 };
 
 onMounted(fetchTraderInfo);
